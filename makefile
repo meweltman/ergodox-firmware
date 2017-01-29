@@ -23,7 +23,7 @@ include src/makefile-options
 
 # which layouts to compile (will override the variable in src/makefile-options)
 # --- default
-LAYOUT := qwerty-kinesis-mod
+LAYOUT := qwerty-kinesis-mod-earl
 # --- all
 LAYOUTS := qwerty-kinesis-mod dvorak-kinesis-mod colemak-symbol-mod workman-p-kinesis-mod
 
@@ -58,7 +58,7 @@ SCRIPTS := build-scripts
 all: dist
 
 clean:
-	git clean -dX  # remove ignored files and directories
+	git clean -dfX  # remove ignored files and directories
 	-rm -r '$(BUILD)'
 
 checkin:

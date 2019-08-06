@@ -1,4 +1,4 @@
-## Electronics Stuff
+## Electronics Stuff.
 
 * [Resistor Color Codes]
   (http://www.ladyada.net/wiki/lib/exe/fetch.php?hash=a2c6a9&w=501&h=785&media=http%3A%2F%2Fwww.ladyada.net%2Fimages%2Fmetertutorial%2Frescolorcode.jpg)

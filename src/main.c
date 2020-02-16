@@ -16,6 +16,7 @@
 #include "./keyboard/controller.h"
 #include "./keyboard/layout.h"
 #include "./keyboard/matrix.h"
+#include "./analog.h"
 #include "./main.h"
 
 // ----------------------------------------------------------------------------

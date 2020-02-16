@@ -49,6 +49,13 @@ bool    main_arg_trans_key_pressed;
 
 // ----------------------------------------------------------------------------
 
+#define ADC_MUX_PIN_D4    0x20
+#define ADC_MUX_PIN_D7    0x22
+
+int16_t mapMousePos(int16_t in) {
+	return round(in/1023.0f * 10) - 5;
+}
+
 /*
  * main()
  */
@@ -62,6 +69,8 @@ int main(void) {
 	kb_led_delay_usb_init();  // give the OS time to load drivers, etc.
 
 	kb_led_state_ready();
+
+	int16_t horizontal, vertical, x, y;
 
 	for (;;) {
 		// swap `main_kb_is_pressed` and `main_kb_was_pressed`, then update
@@ -132,6 +141,15 @@ int main(void) {
 		else { kb_led_compose_off(); }
 		if (keyboard_leds & (1<<4)) { kb_led_kana_on(); }
 		else { kb_led_kana_off(); }
+
+		horizontal = adc_read(ADC_MUX_PIN_D4);
+		vertical = adc_read(ADC_MUX_PIN_D7);
+
+		x = mapMousePos(horizontal);
+		y = mapMousePos(vertical);
+
+		usb_mouse_move(x, y, 0);
+
 	}
 
 	return 0;

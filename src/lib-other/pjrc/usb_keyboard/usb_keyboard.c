@@ -34,8 +34,8 @@
  **************************************************************************/
 
 // You can change these to give your code its own name.
-#define STR_MANUFACTURER	L"unspecified"  // TODO
-#define STR_PRODUCT		L"ErgoDox ergonomic keyboard"
+#define STR_MANUFACTURER	L"matt"  // TODO
+#define STR_PRODUCT		L"Crazy ass keyboard"
 
 
 // Mac OS-X and Linux automatically load the correct drivers.  On
@@ -74,10 +74,16 @@
 #define EXTRA_SIZE		8
 #define EXTRA_BUFFER		EP_DOUBLE_BUFFER
 
+#define MOUSE_INTERFACE		2
+#define MOUSE_ENDPOINT		3
+#define MOUSE_SIZE		8
+#define MOUSE_BUFFER		EP_DOUBLE_BUFFER
+
 
 static const uint8_t PROGMEM endpoint_config_table[] = {
 	1, EP_TYPE_INTERRUPT_IN,  EP_SIZE(KEYBOARD_SIZE) | KEYBOARD_BUFFER,
 	1, EP_TYPE_INTERRUPT_IN,  EP_SIZE(EXTRA_SIZE)    | EXTRA_BUFFER,    // 4
+	1, EP_TYPE_INTERRUPT_IN, EP_SIZE(MOUSE_SIZE) | MOUSE_BUFFER,
 	0
 };
 
@@ -166,13 +172,46 @@ static const uint8_t PROGMEM extra_hid_report_desc[] = {
     0xc0,                          // END_COLLECTION
 };
 
+// Mouse Protocol 1, HID 1.11 spec, Appendix B, page 59-60, with wheel extension
+static const uint8_t PROGMEM mouse_hid_report_desc[] = {
+	0x05, 0x01,			// Usage Page (Generic Desktop)
+	0x09, 0x02,			// Usage (Mouse)
+	0xA1, 0x01,			// Collection (Application)
+	0x05, 0x09,			//   Usage Page (Button)
+	0x19, 0x01,			//   Usage Minimum (Button #1)
+	0x29, 0x03,			//   Usage Maximum (Button #3)
+	0x15, 0x00,			//   Logical Minimum (0)
+	0x25, 0x01,			//   Logical Maximum (1)
+	0x95, 0x03,			//   Report Count (3)
+	0x75, 0x01,			//   Report Size (1)
+	0x81, 0x02,			//   Input (Data, Variable, Absolute)
+	0x95, 0x01,			//   Report Count (1)
+	0x75, 0x05,			//   Report Size (5)
+	0x81, 0x03,			//   Input (Constant)
+	0x05, 0x01,			//   Usage Page (Generic Desktop)
+	0x09, 0x30,			//   Usage (X)
+	0x09, 0x31,			//   Usage (Y)
+	0x15, 0x81,			//   Logical Minimum (-127)
+	0x25, 0x7F,			//   Logical Maximum (127)
+	0x75, 0x08,			//   Report Size (8),
+	0x95, 0x02,			//   Report Count (2),
+	0x81, 0x06,			//   Input (Data, Variable, Relative)
+	0x09, 0x38,			//   Usage (Wheel)
+	0x95, 0x01,			//   Report Count (1),
+	0x81, 0x06,			//   Input (Data, Variable, Relative)
+	0xC0				// End Collection
+};
+
 #define KEYBOARD_HID_DESC_NUM                0
 #define KEYBOARD_HID_DESC_OFFSET             (9+(9+9+7)*KEYBOARD_HID_DESC_NUM+9)
 
-#   define EXTRA_HID_DESC_NUM           (KEYBOARD_HID_DESC_NUM + 1)
-#   define EXTRA_HID_DESC_OFFSET        (9+(9+9+7)*EXTRA_HID_DESC_NUM+9)
+#define EXTRA_HID_DESC_NUM           	(KEYBOARD_HID_DESC_NUM + 1)
+#define EXTRA_HID_DESC_OFFSET        	(9+(9+9+7)*EXTRA_HID_DESC_NUM+9)
 
-#define NUM_INTERFACES                  (EXTRA_HID_DESC_NUM + 1)
+#define MOUSE_HID_DESC_NUM 				(EXTRA_HID_DESC_NUM + 1)
+#define MOUSE_HID_DESC_OFFSET			(9+(9+9+7)*MOUSE_HID_DESC_NUM+9)
+
+#define NUM_INTERFACES                  (MOUSE_HID_DESC_NUM + 1)
 #define CONFIG1_DESC_SIZE               (9+(9+9+7)*NUM_INTERFACES)
 //#define KEYBOARD_HID_DESC_OFFSET (9+9)
 static const uint8_t PROGMEM config1_descriptor[CONFIG1_DESC_SIZE] = {
@@ -240,6 +279,33 @@ static const uint8_t PROGMEM config1_descriptor[CONFIG1_DESC_SIZE] = {
 	0x03,					// bmAttributes (0x03=intr)
 	EXTRA_SIZE, 0,				// wMaxPacketSize
 	10,					// bInterval
+
+	// interface descriptor, USB spec 9.6.5, page 267-269, Table 9-12
+	9,					// bLength
+	4,					// bDescriptorType
+	MOUSE_INTERFACE,			// bInterfaceNumber
+	0,					// bAlternateSetting
+	1,					// bNumEndpoints
+	0x03,					// bInterfaceClass (0x03 = HID)
+	0x01,					// bInterfaceSubClass (0x01 = Boot)
+	0x01,					// bInterfaceProtocol (0x02 = Mouse)
+	0,					// iInterface
+	// HID interface descriptor, HID 1.11 spec, section 6.2.1
+	9,					// bLength
+	0x21,					// bDescriptorType
+	0x11, 0x01,				// bcdHID
+	0,					// bCountryCode
+	1,					// bNumDescriptors
+	0x22,					// bDescriptorType
+	sizeof(mouse_hid_report_desc),		// wDescriptorLength
+	0,
+	// endpoint descriptor, USB spec 9.6.6, page 269-271, Table 9-13
+	7,					// bLength
+	5,					// bDescriptorType
+	MOUSE_ENDPOINT | 0x80,			// bEndpointAddress
+	0x03,					// bmAttributes (0x03=intr)
+	MOUSE_SIZE, 0,					// wMaxPacketSize
+	1					// bInterval
 };
 
 // If you're desperate for a little extra code memory, these strings
@@ -284,6 +350,9 @@ static struct descriptor_list_struct {
 	    // Extra HID Descriptor
 	{0x2100, EXTRA_INTERFACE, config1_descriptor+EXTRA_HID_DESC_OFFSET, 9},
 	{0x2200, EXTRA_INTERFACE, extra_hid_report_desc, sizeof(extra_hid_report_desc)},
+		// Mouse HID Descriptor
+	{0x2100, MOUSE_INTERFACE, config1_descriptor+MOUSE_HID_DESC_OFFSET, 9},
+	{0x2200, MOUSE_INTERFACE, mouse_hid_report_desc, sizeof(mouse_hid_report_desc)},
         // STRING descriptors
 	{0x0300, 0x0000, (const uint8_t *)&string0, 4},
 	{0x0301, 0x0409, (const uint8_t *)&string1, sizeof(STR_MANUFACTURER)},
@@ -300,6 +369,14 @@ static struct descriptor_list_struct {
 
 // zero when we are not configured, non-zero when enumerated
 static volatile uint8_t usb_configuration=0;
+
+// which buttons are currently pressed
+static uint8_t mouse_buttons=0;
+// protocol setting from the host.  We use exactly the same report
+// either way, so this variable only stores the setting since we
+// are required to be able to report which setting is in use.
+static uint8_t mouse_protocol=1;
+
 
 // which modifier keys are currently pressed
 // 1=left ctrl,    2=left shift,   4=left alt,    8=left gui
@@ -402,6 +479,55 @@ int8_t usb_keyboard_send(void)
 	}
 	UEINTX = 0x3A;
 	keyboard_idle_count = 0;
+	SREG = intr_state;
+	return 0;
+}
+
+
+// Set the mouse buttons.  To create a "click", 2 calls are needed,
+// one to push the button down and the second to release it
+int8_t usb_mouse_buttons(uint8_t left, uint8_t middle, uint8_t right)
+{
+	uint8_t mask=0;
+
+	if (left) mask |= 1;
+	if (middle) mask |= 4;
+	if (right) mask |= 2;
+	mouse_buttons = mask;
+	return usb_mouse_move(0, 0, 0);
+}
+
+// Move the mouse.  x, y and wheel are -127 to 127.  Use 0 for no movement.
+int8_t usb_mouse_move(int8_t x, int8_t y, int8_t wheel)
+{
+	uint8_t intr_state, timeout;
+
+	if (!usb_configuration) return -1;
+	if (x == -128) x = -127;
+	if (y == -128) y = -127;
+	if (wheel == -128) wheel = -127;
+	intr_state = SREG;
+	cli();
+	UENUM = MOUSE_ENDPOINT;
+	timeout = UDFNUML + 50;
+	while (1) {
+		// are we ready to transmit?
+		if (UEINTX & (1<<RWAL)) break;
+		SREG = intr_state;
+		// has the USB gone offline?
+		if (!usb_configuration) return -1;
+		// have we waited too long?
+		if (UDFNUML == timeout) return -1;
+		// get ready to try checking again
+		intr_state = SREG;
+		cli();
+		UENUM = MOUSE_ENDPOINT;
+	}
+	UEDATX = mouse_buttons;
+	UEDATX = x;
+	UEDATX = y;
+	UEDATX = wheel;
+	UEINTX = 0x3A;
 	SREG = intr_state;
 	return 0;
 }
@@ -651,6 +777,32 @@ ISR(USB_COM_vect)
 				}
 				if (bRequest == HID_SET_PROTOCOL) {
 					keyboard_protocol = wValue;
+					usb_send_in();
+					return;
+				}
+			}
+		}
+		if (wIndex == MOUSE_INTERFACE) {
+			if (bmRequestType == 0xA1) {
+				if (bRequest == HID_GET_REPORT) {
+					usb_wait_in_ready();
+					UEDATX = mouse_buttons;
+					UEDATX = 0;
+					UEDATX = 0;
+					UEDATX = 0;
+					usb_send_in();
+					return;
+				}
+				if (bRequest == HID_GET_PROTOCOL) {
+					usb_wait_in_ready();
+					UEDATX = mouse_protocol;
+					usb_send_in();
+					return;
+				}
+			}
+			if (bmRequestType == 0x21) {
+				if (bRequest == HID_SET_PROTOCOL) {
+					mouse_protocol = wValue;
 					usb_send_in();
 					return;
 				}

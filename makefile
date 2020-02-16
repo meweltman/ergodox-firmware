@@ -57,6 +57,12 @@ SCRIPTS := build-scripts
 
 all: dist
 
+build:
+	docker build -t ergodox-firmware .
+	docker create -ti --name helper ergodox-firmware bash
+	docker cp helper:/src/firmware.hex ${PWD}/firmware.hex
+	docker rm helper
+
 clean:
 	git clean -dfX  # remove ignored files and directories
 	-rm -r '$(BUILD)'

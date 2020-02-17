@@ -72,6 +72,10 @@
 	void kbfun_layer_push_numpad             (void);
 	void kbfun_layer_pop_numpad              (void);
 	void kbfun_mediakey_press_release        (void);
+	
+	void mouse_button_press_release           (void);
+	void mouse_scroll_lock_press_release     (void);
+	void mouse_move(uint16_t x, uint16_t y);
 
 #endif
 

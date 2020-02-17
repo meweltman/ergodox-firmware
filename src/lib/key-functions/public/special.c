@@ -163,4 +163,16 @@ void kbfun_mediakey_press_release(void) {
 
 /* ----------------------------------------------------------------------------
  * ------------------------------------------------------------------------- */
+void mouse_button_press_release(void) {
+	uint8_t buttoncode = kb_layout_get(LAYER, ROW, COL);
+	_kbfun_mousebutton_press_release(buttoncode);
+}
 
+void mouse_scroll_lock_press_release(void) {
+	uint8_t code = kb_layout_get(LAYER, ROW, COL);
+	_kbfun_toggle_mouse_scroll_lock(code > 0);
+}
+
+void mouse_move(uint16_t x, uint16_t y) {
+	_kbfun_mouse_move(x, y);
+}

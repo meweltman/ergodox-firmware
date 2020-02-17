@@ -371,7 +371,9 @@ static struct descriptor_list_struct {
 static volatile uint8_t usb_configuration=0;
 
 // which buttons are currently pressed
-static uint8_t mouse_buttons=0;
+uint8_t mouse_buttons=0;
+
+int8_t mouse_position[3]={0,0,0};
 // protocol setting from the host.  We use exactly the same report
 // either way, so this variable only stores the setting since we
 // are required to be able to report which setting is in use.
@@ -494,18 +496,18 @@ int8_t usb_mouse_buttons(uint8_t left, uint8_t middle, uint8_t right)
 	if (middle) mask |= 4;
 	if (right) mask |= 2;
 	mouse_buttons = mask;
-	return usb_mouse_move(0, 0, 0);
+	return usb_mouse_send();
 }
 
 // Move the mouse.  x, y and wheel are -127 to 127.  Use 0 for no movement.
-int8_t usb_mouse_move(int8_t x, int8_t y, int8_t wheel)
+int8_t usb_mouse_send(void)
 {
 	uint8_t intr_state, timeout;
 
 	if (!usb_configuration) return -1;
-	if (x == -128) x = -127;
-	if (y == -128) y = -127;
-	if (wheel == -128) wheel = -127;
+	if (mouse_position[0] == -128) mouse_position[0] = -127;
+	if (mouse_position[1] == -128) mouse_position[1] = -127;
+	if (mouse_position[2] == -128) mouse_position[2] = -127;
 	intr_state = SREG;
 	cli();
 	UENUM = MOUSE_ENDPOINT;
@@ -524,9 +526,9 @@ int8_t usb_mouse_move(int8_t x, int8_t y, int8_t wheel)
 		UENUM = MOUSE_ENDPOINT;
 	}
 	UEDATX = mouse_buttons;
-	UEDATX = x;
-	UEDATX = y;
-	UEDATX = wheel;
+	UEDATX = mouse_position[0];
+	UEDATX = mouse_position[1];
+	UEDATX = mouse_position[2];
 	UEINTX = 0x3A;
 	SREG = intr_state;
 	return 0;

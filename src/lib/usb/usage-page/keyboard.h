@@ -278,6 +278,13 @@
 #define MEDIAKEY_AUDIO_VOL_UP   0x05
 #define MEDIAKEY_AUDIO_VOL_DOWN 0x06
 
+// Also not real scan codes
+#define MOUSE_LEFT			0x01
+#define MOUSE_RIGHT			0x02
+#define MOUSE_MIDDLE		0x04
+#define MOUSE_SCROLL_ON		0x01
+#define MOUSE_SCROLL_OFF	0x00
+
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------

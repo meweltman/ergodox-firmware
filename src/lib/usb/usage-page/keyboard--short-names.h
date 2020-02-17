@@ -304,6 +304,13 @@
 #define _memMul_kp          KEYPAD_MemoryMultiply
 #define _memDiv_kp          KEYPAD_MemoryDivide
 
+// mouse
+#define _mouseLeft			MOUSE_LEFT
+#define _mouseRight			MOUSE_RIGHT
+#define _mouseMiddle		MOUSE_MIDDLE
+#define _mouseScrollOn		MOUSE_SCROLL_ON
+#define _mouseScrollOff		MOUSE_SCROLL_OFF
+
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------

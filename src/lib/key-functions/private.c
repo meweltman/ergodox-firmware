@@ -9,6 +9,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include <math.h>
 #include "../../lib-other/pjrc/usb_keyboard/usb_keyboard.h"
 #include "../../lib/usb/usage-page/keyboard.h"
 #include "../../keyboard/layout.h"
@@ -146,3 +147,38 @@ void _kbfun_mediakey_press_release(bool press, uint8_t keycode) {
 	}
 }
 
+void _kbfun_mousebutton_press_release(uint8_t buttoncode) {
+	mouse_buttons |= buttoncode;
+}
+
+bool mouse_scroll_lock=false;
+
+void _kbfun_toggle_mouse_scroll_lock(bool lock) {
+	mouse_scroll_lock = lock;
+}
+
+int8_t _map_mouse_position(int16_t in) {
+	return round(in/1023.0f * 10) - 5;
+}
+
+int8_t _map_mouse_wheel(int16_t in) {
+	return round(in/1023.0f * 6) - 3;
+}
+
+uint8_t wheel_counter = 20, move; 
+void _kbfun_mouse_move(uint16_t x, uint16_t y) {
+	if (mouse_scroll_lock) {
+		move = _map_mouse_wheel(y);
+		if (move != 0) {
+			if (--wheel_counter <= 0) {
+				wheel_counter = 20;  
+				mouse_position[2] = move;
+			} else {
+				mouse_position[2] = 0;
+			}
+		}
+	} else {
+		mouse_position[0] = _map_mouse_position(x);
+		mouse_position[1] = _map_mouse_position(y);
+	}
+}

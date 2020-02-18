@@ -56,7 +56,7 @@ bool    main_arg_trans_key_pressed;
  * main()
  */
 int main(void) {
-	kb_init();  // does controller initialization too
+	// kb_init();  // does controller initialization too
 
 	// kb_led_state_power_on();
 
@@ -69,6 +69,7 @@ int main(void) {
 	int16_t x, y;
 
 	for (;;) {
+		/*
 		// swap `main_kb_is_pressed` and `main_kb_was_pressed`, then update
 		bool (*temp)[KB_ROWS][KB_COLUMNS] = main_kb_was_pressed;
 		main_kb_was_pressed = main_kb_is_pressed;
@@ -137,7 +138,7 @@ int main(void) {
 		else { kb_led_compose_off(); }
 		if (keyboard_leds & (1<<4)) { kb_led_kana_on(); }
 		else { kb_led_kana_off(); }
-
+*/
 		x = adc_read(ADC_MUX_PIN_D4);
 		y = adc_read(ADC_MUX_PIN_D7);
 

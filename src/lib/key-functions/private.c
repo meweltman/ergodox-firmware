@@ -147,8 +147,12 @@ void _kbfun_mediakey_press_release(bool press, uint8_t keycode) {
 	}
 }
 
-void _kbfun_mousebutton_press_release(uint8_t buttoncode) {
-	mouse_buttons |= buttoncode;
+void _kbfun_mousebutton_press_release(bool press, uint8_t buttoncode) {
+	if (press) {
+		mouse_buttons |= buttoncode;
+	} else {
+		mouse_buttons &= ~buttoncode;
+	}
 }
 
 bool _mouse_scroll_lock=false;
@@ -156,22 +160,34 @@ void _kbfun_toggle_mouse_scroll_lock(bool lock) {
 	_mouse_scroll_lock = lock;
 }
 
-int8_t _map_mouse_input_value(int16_t in) {
-	return round(in/1023.0f * 254) - 127;
-}
-
-int8_t _map_mouse_value(int8_t in, uint8_t range) {
-	return round(in/127.0f * range);
-}
-
-uint8_t _freq_counter = 20, _freq_counter_value, _freq_scalar, _move_scalar;
+uint8_t _freq_counter = 20, _freq_counter_value, _freq_scalar, _move_scalar, _input_scalar = 100;
 int8_t _x, _y, _movex, _movey;
+
+int8_t _map_mouse_input_value(int16_t in) {
+	return round(in/1023.0f * _input_scalar * 2) - _input_scalar;
+}
+
+int8_t _map_mouse_move(int8_t in) {
+	return round(in/(_input_scalar * 1.0f) * _move_scalar);
+}
+
+int8_t _set_mouse_freq(int8_t in) {
+	_freq_counter_value = round(in/(_input_scalar * 1.0f) * _freq_scalar);
+	_freq_counter = fmax(_freq_scalar - fabs(_freq_counter_value), _freq_counter);
+	if (_freq_counter_value > 0) {
+		return 1;
+	} else if (_freq_counter_value < 0) {
+		return -1;
+	} else {
+		return 0;
+	}
+}
 
 void _kbfun_mouse_move(uint16_t xin, uint16_t yin) {
 	_x = _map_mouse_input_value(xin);
 	_y = _map_mouse_input_value(yin);
 
-	if ((_x == 0 || _mouse_scroll_lock) && _y == 0) {
+	if ((_x == 0 ) && _y == 0) {
 		mouse_position[0] = 0;
 		mouse_position[1] = 0;
 		mouse_position[2] = 0;
@@ -186,8 +202,8 @@ void _kbfun_mouse_move(uint16_t xin, uint16_t yin) {
 		_move_scalar = 5;
 	}
 	
-	_movex = _map_mouse_value(_x, _move_scalar);
-	_movey = _map_mouse_value(_y, _move_scalar);
+	_movex = _map_mouse_move(_x);
+	_movey = _map_mouse_move(_y);
 
 	if (_mouse_scroll_lock) {
 		if (_movey != 0) {
@@ -204,19 +220,13 @@ void _kbfun_mouse_move(uint16_t xin, uint16_t yin) {
 	}
 
 	if (--_freq_counter > 0) {
+		mouse_position[0] = 0;
+		mouse_position[1] = 0;
+		mouse_position[2] = 0;
 		return;
 	}
 
-	_freq_counter_value = _map_mouse_value(_y, _freq_scalar);
-	_freq_counter = _freq_scalar - fabs(_freq_counter_value);
-	if (_freq_counter_value > 0) {
-		_movey = 1;
-	} else if (_freq_counter_value < 0) {
-		_movey = -1;
-	} else {
-		_movey = 0;
-	}
-
+	_movey = _set_mouse_freq(_y);
 	if (_mouse_scroll_lock) {
 		mouse_position[0] = 0;
 		mouse_position[1] = 0;
@@ -224,16 +234,7 @@ void _kbfun_mouse_move(uint16_t xin, uint16_t yin) {
 		return;
 	}
 
-	_freq_counter_value = _map_mouse_value(_x, _freq_scalar);
-	_freq_counter = fmax(_freq_scalar - fabs(_freq_counter_value), _freq_counter);
-	if (_freq_counter_value > 0) {
-		_movex = 1;
-	} else if (_freq_counter_value < 0) {
-		_movex = -1;
-	} else {
-		_movex = 0;
-	}
-
+	_movex = _set_mouse_freq(_x);
 	mouse_position[0] = _movex;
 	mouse_position[1] = _movey;
 	mouse_position[2] = 0;

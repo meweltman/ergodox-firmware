@@ -151,34 +151,90 @@ void _kbfun_mousebutton_press_release(uint8_t buttoncode) {
 	mouse_buttons |= buttoncode;
 }
 
-bool mouse_scroll_lock=false;
-
+bool _mouse_scroll_lock=false;
 void _kbfun_toggle_mouse_scroll_lock(bool lock) {
-	mouse_scroll_lock = lock;
+	_mouse_scroll_lock = lock;
 }
 
-int8_t _map_mouse_position(int16_t in) {
-	return round(in/1023.0f * 10) - 5;
+int8_t _map_mouse_input_value(int16_t in) {
+	return round(in/1023.0f * 254) - 127;
 }
 
-int8_t _map_mouse_wheel(int16_t in) {
-	return round(in/1023.0f * 6) - 3;
+int8_t _map_mouse_value(int8_t in, uint8_t range) {
+	return round(in/127.0f * range);
 }
 
-uint8_t wheel_counter = 20, move; 
-void _kbfun_mouse_move(uint16_t x, uint16_t y) {
-	if (mouse_scroll_lock) {
-		move = _map_mouse_wheel(y);
-		if (move != 0) {
-			if (--wheel_counter <= 0) {
-				wheel_counter = 20;  
-				mouse_position[2] = move;
-			} else {
-				mouse_position[2] = 0;
-			}
-		}
-	} else {
-		mouse_position[0] = _map_mouse_position(x);
-		mouse_position[1] = _map_mouse_position(y);
+uint8_t _freq_counter = 20, _freq_counter_value, _freq_scalar, _move_scalar;
+int8_t _x, _y, _movex, _movey;
+
+void _kbfun_mouse_move(uint16_t xin, uint16_t yin) {
+	_x = _map_mouse_input_value(xin);
+	_y = _map_mouse_input_value(yin);
+
+	if ((_x == 0 || _mouse_scroll_lock) && _y == 0) {
+		mouse_position[0] = 0;
+		mouse_position[1] = 0;
+		mouse_position[2] = 0;
+		return;
 	}
+
+	if (_mouse_scroll_lock) {
+		_freq_scalar = 20;
+		_move_scalar = 2;
+	} else {
+		_freq_scalar = 10;
+		_move_scalar = 5;
+	}
+	
+	_movex = _map_mouse_value(_x, _move_scalar);
+	_movey = _map_mouse_value(_y, _move_scalar);
+
+	if (_mouse_scroll_lock) {
+		if (_movey != 0) {
+			mouse_position[0] = 0;
+			mouse_position[1] = 0;
+			mouse_position[2] = _movey;
+			return;
+		}
+	} else if (_movex != 0 || _movey != 0) {
+		mouse_position[0] = _movex;
+		mouse_position[1] = _movey;
+		mouse_position[2] = 0;
+		return;
+	}
+
+	if (--_freq_counter > 0) {
+		return;
+	}
+
+	_freq_counter_value = _map_mouse_value(_y, _freq_scalar);
+	_freq_counter = _freq_scalar - fabs(_freq_counter_value);
+	if (_freq_counter_value > 0) {
+		_movey = 1;
+	} else if (_freq_counter_value < 0) {
+		_movey = -1;
+	} else {
+		_movey = 0;
+	}
+
+	if (_mouse_scroll_lock) {
+		mouse_position[0] = 0;
+		mouse_position[1] = 0;
+		mouse_position[2] = _movey;
+		return;
+	}
+
+	_freq_counter_value = _map_mouse_value(_x, _freq_scalar);
+	_freq_counter = fmax(_freq_scalar - fabs(_freq_counter_value), _freq_counter);
+	if (_freq_counter_value > 0) {
+		_movex = 1;
+	} else if (_freq_counter_value < 0) {
+		_movex = -1;
+	} else {
+		_movex = 0;
+	}
+
+	mouse_position[0] = _movex;
+	mouse_position[1] = _movey;
+	mouse_position[2] = 0;
 }

@@ -212,12 +212,12 @@ void _kbfun_mouse_move(uint16_t xin, uint16_t yin) {
 		if (movey != 0) {
 			mouse_position[0] = 0;
 			mouse_position[1] = 0;
-			mouse_position[2] = movey;
+			mouse_position[2] = movey * -1;
 			return;
 		}
 	} else if (movex != 0 || movey != 0) {
-		mouse_position[0] = movex;
-		mouse_position[1] = movey;
+		mouse_position[0] = movex * -1;
+		mouse_position[1] = movey * -1;
 		mouse_position[2] = 0;
 		return;
 	}
@@ -233,12 +233,12 @@ void _kbfun_mouse_move(uint16_t xin, uint16_t yin) {
 	if (_mouse_scroll_lock) {
 		mouse_position[0] = 0;
 		mouse_position[1] = 0;
-		mouse_position[2] = movey;
+		mouse_position[2] = movey * -1;
 		return;
 	}
 
 	movex = _set_mouse_freq(x);
-	mouse_position[0] = movex;
-	mouse_position[1] = movey;
+	mouse_position[0] = movex * -1;
+	mouse_position[1] = movey * -1;
 	mouse_position[2] = 0;
 }

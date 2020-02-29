@@ -311,6 +311,13 @@
 #define _mouseScrollOn		MOUSE_SCROLL_ON
 #define _mouseScrollOff		MOUSE_SCROLL_OFF
 
+// media
+#define _prevTrack MEDIAKEY_PREV_TRACK
+#define _volDown MEDIAKEY_AUDIO_VOL_DOWN
+#define _volUp MEDIAKEY_AUDIO_VOL_UP
+#define _nextTrack MEDIAKEY_NEXT_TRACK
+#define _play MEDIAKEY_PLAY_PAUSE
+
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------

@@ -97,8 +97,6 @@
 	do {								\
 		teensypin_write(register, operation, UNUSED_0);		\
 		teensypin_write(register, operation, UNUSED_1);		\
-		teensypin_write(register, operation, UNUSED_2);		\
-		teensypin_write(register, operation, UNUSED_3);		\
 		teensypin_write(register, operation, UNUSED_4); }	\
 	while(0)
 

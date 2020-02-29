@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- * ergoDOX : layout : Dvorak : exports
+ * ergoDOX : controller specific exports
  * ----------------------------------------------------------------------------
  * Copyright (c) 2012 Ben Blazak <benblazak.dev@gmail.com>
  * Released under The MIT License (MIT) (see "license.md")
@@ -7,24 +7,21 @@
  * ------------------------------------------------------------------------- */
 
 
-#ifndef KEYBOARD__ERGODOX__LAYOUT__DVORAK_h
-	#define KEYBOARD__ERGODOX__LAYOUT__DVORAK_h
+#ifndef KEYBOARD__DACTYL__CONTROLLER_h
+	#define KEYBOARD__DACTYL__CONTROLLER_h
 
-	#include "../controller.h"
-
-	// --------------------------------------------------------------------
-
-	#define kb_led_num_on()      _kb_led_1_on()
-	#define kb_led_num_off()     _kb_led_1_off()
-	#define kb_led_caps_on()     _kb_led_2_on()
-	#define kb_led_caps_off()    _kb_led_2_off()
-	#define kb_led_scroll_on()   _kb_led_3_on()
-	#define kb_led_scroll_off()  _kb_led_3_off()
+	#include <stdbool.h>
+	#include <stdint.h>
+	#include "./matrix.h"
 
 	// --------------------------------------------------------------------
 
-	#include "./default--led-control.h"
-	#include "./default--matrix-control.h"
+	#include "./controller/teensy-2-0--led.h"
+
+	// --------------------------------------------------------------------
+
+	uint8_t kb_init(void);
+	uint8_t kb_update_matrix(bool matrix[KB_ROWS][KB_COLUMNS]);
 
 #endif
 

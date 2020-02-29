@@ -1,0 +1,131 @@
+#+Title:  Dactyl Firmware modification
+#+Author: Felix Brilej
+
+
+* Introduction
+  I dont't claim any copy-rights, I just want to make this work for my dactyl keyboard by
+  introducing some slight modifications.
+
+  Change the coding system for source-blocks to work on my home PC really quick
+  #+BEGIN_SRC elisp
+  ;; Coding System
+  (prefer-coding-system 'utf-8-unix)
+  (setq coding-system-for-read 'utf-8-unix)
+  (setq coding-system-for-write 'utf-8-unix)
+  #+END_SRC
+
+  This mod only works with the qwerty-kinesis-mod layout.
+
+  Create a fresh build:
+  #+BEGIN_SRC sh
+  cd src/keyboard/dactyl/
+  make
+  #+END_SRC
+
+* The mod
+  I created a new "keyboard" in /src/keyboard named "dactyl".
+  Therefor i simply copied the ergodox folder.
+  #+BEGIN_SRC sh :results raw
+  ls ..
+  #+END_SRC
+
+  #+RESULTS:
+  controller.h
+  dactyl
+  ergodox
+  layout.h
+  matrix.h
+
+  _My approach_
+  The keys are all numbered (k50, k51, k52)
+  My approach is to just remove the keys I dont want without changing the overall numbering,
+  resulting in a number-gap.
+  I hope this doesnt break the code, if it does, Ill have to try again and do much more rewriting,
+  I'll probably use some emacs automation in that case.
+
+  _Unused keys_
+  - Left side (from top to bottom)
+    - k56
+    - k46
+    - k26
+  - Right side (from top to bottom)
+    - k57
+    - k47
+    - k27
+
+  Starting to do the conversion
+  #+BEGIN_SRC sh :results raw
+  ls *
+  #+END_SRC
+
+  #+RESULTS:
+  - [ ] circuit-diagram.svg
+  - [X] controller.c
+    - generic
+  - [X] controller.h
+    - generic
+  - [X] dactyl.org
+    - thats my own documentation
+  - [X] layout.h
+    - references to a lib-file, but those are only 3 lines
+  - [ ] layout.md
+  - [X] matrix.h
+    - underlying for the layout
+  - [X] options.h
+    - decides which pins are driving and which are not, wiring not done yet though
+
+  controller (folder):
+  - [X] mcp23018--functions.h
+    - changed a variable name from ergodox to dactyl, may cause problems
+  - [X] mcp23018.c
+    - doesnt contain that variable from the above file
+    - changed nothing here, seems file
+  - [ ] mcp23018.md
+    - documentation about the chip itself, ergodox or dactyl doesnt matter here
+  - [X] teensy-2-0--functions.h
+    - changed a variable name from ergodox to dactyl, may cause problems
+  - [X] teensy-2-0--led.h
+    - changed a variable name from ergodox to dactyl, may cause problems
+  - [X] teensy-2-0.c
+    - here i can see which row is connected to which pin
+    - didnt change anything here
+  - [ ] teensy-2-0.md
+    - simple documentation
+
+  layout (folder):
+  - colemak-jc-mod.c
+  - colemak-jc-mod.h
+  - colemak-symbol-mod.c
+  - colemak-symbol-mod.h
+  - [X] default--led-control.h
+    - changed a variable name from ergodox to dactyl, may cause problems
+  - [X] default--matrix-control.h
+    - changed a variable name from ergodox to dactyl, may cause problems
+  - dvorak-kinesis-mod.c
+  - dvorak-kinesis-mod.h
+  - [X] qwerty-kinesis-mod.c
+    - i will have to think of a different place for these keys:
+      - F11 and F12
+      - i found a tab and replaced it with spaces, i hope that wont cause problems
+      - that took quite some time :D not sure what the layers do, probably worth to look at the
+        ergodox layout
+  - [X] qwerty-kinesis-mod.h
+    - changed a variable name from ergodox to dactyl, may cause problems
+  - workman-p-kinesis-mod.c
+  - workman-p-kinesis-mod.h
+
+  The makefile:
+  - [X] makefile-options
+    - changed keyboard to dactyl
+
+** TODO Look at the ergodox layout, what are these layers?
+   - In layout.c there are lots of layers, with which key can these be activated?
+   - Have I gotten rid of that key in my modification?
+** TODO Change "ergodox" in the comments
+   This is not important to make everything work in the first place
+
+   Am i allowed to change those comments in the first place?
+   - check the MIT License (MIT)
+
+** TODO Update all the .md files according to my changes
+   Only want to do this if I am allowed to upload this at all. First this is fine.

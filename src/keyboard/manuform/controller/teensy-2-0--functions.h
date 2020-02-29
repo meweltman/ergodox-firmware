@@ -7,8 +7,8 @@
  * ------------------------------------------------------------------------- */
 
 
-#ifndef KEYBOARD__ERGODOX__CONTROLLER__TEENSY_2_0__FUNCTIONS_h
-	#define KEYBOARD__ERGODOX__CONTROLLER__TEENSY_2_0__FUNCTIONS_h
+#ifndef KEYBOARD__DACTYL__CONTROLLER__TEENSY_2_0__FUNCTIONS_h
+	#define KEYBOARD__DACTYL__CONTROLLER__TEENSY_2_0__FUNCTIONS_h
 
 	#include <stdbool.h>
 	#include <stdint.h>
@@ -20,4 +20,3 @@
 	uint8_t teensy_update_matrix( bool matrix[KB_ROWS][KB_COLUMNS] );
 
 #endif
-

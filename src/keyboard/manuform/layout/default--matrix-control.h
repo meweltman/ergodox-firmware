@@ -7,8 +7,8 @@
  * ------------------------------------------------------------------------- */
 
 
-#ifndef KEYBOARD__ERGODOX__LAYOUT__DEFAULT__MATRIX_CONTROL_h
-	#define KEYBOARD__ERGODOX__LAYOUT__DEFAULT__MATRIX_CONTROL_h
+#ifndef KEYBOARD__DACTYL__LAYOUT__DEFAULT__MATRIX_CONTROL_h
+	#define KEYBOARD__DACTYL__LAYOUT__DEFAULT__MATRIX_CONTROL_h
 
 	#include <stdint.h>
 	#include <avr/pgmspace.h>
@@ -78,4 +78,3 @@
 	#endif
 
 #endif
-

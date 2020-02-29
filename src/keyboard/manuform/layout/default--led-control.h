@@ -7,8 +7,8 @@
  * ------------------------------------------------------------------------- */
 
 
-#ifndef KEYBOARD__ERGODOX__LAYOUT__DEFAULT__LED_CONTROL_h
-	#define KEYBOARD__ERGODOX__LAYOUT__DEFAULT__LED_CONTROL_h
+#ifndef KEYBOARD__DACTYL__LAYOUT__DEFAULT__LED_CONTROL_h
+	#define KEYBOARD__DACTYL__LAYOUT__DEFAULT__LED_CONTROL_h
 
 	// --------------------------------------------------------------------
 
@@ -83,4 +83,3 @@
 
 
 #endif
-

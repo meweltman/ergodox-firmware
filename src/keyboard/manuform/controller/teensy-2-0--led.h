@@ -7,8 +7,8 @@
  * ------------------------------------------------------------------------- */
 
 
-#ifndef KEYBOARD__ERGODOX__CONTROLLER__TEENSY_2_0__LED_h
-	#define KEYBOARD__ERGODOX__CONTROLLER__TEENSY_2_0__LED_h
+#ifndef KEYBOARD__DACTYL__CONTROLLER__TEENSY_2_0__LED_h
+	#define KEYBOARD__DACTYL__CONTROLLER__TEENSY_2_0__LED_h
 
 	#include <stdint.h>
 	#include <avr/io.h>  // for the register macros
@@ -56,4 +56,3 @@
 		} while(0)
 
 #endif
-

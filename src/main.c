@@ -125,8 +125,8 @@ int main(void) {
 		x = adc_read(ADC_MUX_PIN_D4);
 		y = adc_read(ADC_MUX_PIN_D7);
 
-		mouse_move(x, y);
-		usb_mouse_send();
+		//mouse_move(x, y);
+		//usb_mouse_send();
 
 		// send the USB report (even if nothing's changed)
 		usb_keyboard_send();

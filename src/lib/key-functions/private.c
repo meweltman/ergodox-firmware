@@ -158,7 +158,7 @@ void _kbfun_mousebutton_press_release(bool press, uint8_t buttoncode) {
 bool _mouse_scroll_lock=false;
 uint8_t _freq_counter = 20,
         _freq_scalar = 20 ,
-		_move_scalar = 2,
+		_move_scalar = 10,
 		_input_scalar = 100;
 
 void _kbfun_toggle_mouse_scroll_lock(bool lock) {
@@ -173,11 +173,11 @@ void _kbfun_toggle_mouse_scroll_lock(bool lock) {
 }
 
 int8_t _map_mouse_input_value(int16_t in) {
-	return round(in/1023.0f * _input_scalar * 2) - _input_scalar;
+	return floor(in/1023.0f * _input_scalar * 2) - _input_scalar;
 }
 
 int8_t _map_mouse_move(int8_t in) {
-	return round(in/(_input_scalar * 1.0f) * _move_scalar);
+	return floor(in/(_input_scalar * 1.0f) * _move_scalar);
 }
 
 int8_t _set_mouse_freq(int8_t in) {
@@ -192,11 +192,11 @@ int8_t _set_mouse_freq(int8_t in) {
 	}
 }
 
-void _kbfun_mouse_move(uint16_t xin, uint16_t yin) {
+void _kbfun_mouse_move(uint16_t yin, uint16_t xin) {
 	int8_t x, y, movex, movey;
 
-	y = _map_mouse_input_value(xin - 25);
-	x = _map_mouse_input_value(yin);
+	y = _map_mouse_input_value(yin-10);
+	x = _map_mouse_input_value(xin-50);
 
 	if ((x == 0 ) && y == 0) {
 		mouse_position[0] = 0;
@@ -209,36 +209,12 @@ void _kbfun_mouse_move(uint16_t xin, uint16_t yin) {
 	movey = _map_mouse_move(y);
 
 	if (_mouse_scroll_lock) {
-		if (movey != 0) {
-			mouse_position[0] = 0;
-			mouse_position[1] = 0;
-			mouse_position[2] = movey * -1;
-			return;
-		}
-	} else if (movex != 0 || movey != 0) {
-		mouse_position[0] = movex;
-		mouse_position[1] = movey * -1;
-		mouse_position[2] = 0;
-		return;
-	}
-
-	if (--_freq_counter > 0) {
-		mouse_position[0] = 0;
-		mouse_position[1] = 0;
-		mouse_position[2] = 0;
-		return;
-	}
-
-	movey = _set_mouse_freq(y);
-	if (_mouse_scroll_lock) {
 		mouse_position[0] = 0;
 		mouse_position[1] = 0;
 		mouse_position[2] = movey * -1;
-		return;
+	} else {
+		mouse_position[0] = movex;
+		mouse_position[1] = movey * -1;
+		mouse_position[2] = 0;
 	}
-
-	movex = _set_mouse_freq(x);
-	mouse_position[0] = movex;
-	mouse_position[1] = movey * -1;
-	mouse_position[2] = 0;
 }

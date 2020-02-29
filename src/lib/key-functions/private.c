@@ -195,8 +195,8 @@ int8_t _set_mouse_freq(int8_t in) {
 void _kbfun_mouse_move(uint16_t xin, uint16_t yin) {
 	int8_t x, y, movex, movey;
 
-	x = _map_mouse_input_value(xin - 25);
-	y = _map_mouse_input_value(yin);
+	y = _map_mouse_input_value(xin - 25);
+	x = _map_mouse_input_value(yin);
 
 	if ((x == 0 ) && y == 0) {
 		mouse_position[0] = 0;
@@ -216,7 +216,7 @@ void _kbfun_mouse_move(uint16_t xin, uint16_t yin) {
 			return;
 		}
 	} else if (movex != 0 || movey != 0) {
-		mouse_position[0] = movex * -1;
+		mouse_position[0] = movex;
 		mouse_position[1] = movey * -1;
 		mouse_position[2] = 0;
 		return;
@@ -238,7 +238,7 @@ void _kbfun_mouse_move(uint16_t xin, uint16_t yin) {
 	}
 
 	movex = _set_mouse_freq(x);
-	mouse_position[0] = movex * -1;
+	mouse_position[0] = movex;
 	mouse_position[1] = movey * -1;
 	mouse_position[2] = 0;
 }

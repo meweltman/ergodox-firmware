@@ -23,10 +23,10 @@ uint8_t kb_init(void) {
 	
 	if (teensy_init())    // must be first
 		return 1;
-	/*	
+		
 	if (mcp23018_init())  // must be second
 		return 2;
-*/
+
 	return 0;  // success
 }
 

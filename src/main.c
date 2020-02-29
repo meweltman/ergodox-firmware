@@ -56,20 +56,20 @@ bool    main_arg_trans_key_pressed;
  * main()
  */
 int main(void) {
-	// kb_init();  // does controller initialization too
+	kb_init();  // does controller initialization too
 
-	// kb_led_state_power_on();
+	kb_led_state_power_on();
 
 	usb_init();
 	while (!usb_configured());
-	// kb_led_delay_usb_init();  // give the OS time to load drivers, etc.
+	kb_led_delay_usb_init();  // give the OS time to load drivers, etc.
 
-	// kb_led_state_ready();
+	kb_led_state_ready();
 
 	int16_t x, y;
 
 	for (;;) {
-		/*
+		
 		// swap `main_kb_is_pressed` and `main_kb_was_pressed`, then update
 		bool (*temp)[KB_ROWS][KB_COLUMNS] = main_kb_was_pressed;
 		main_kb_was_pressed = main_kb_is_pressed;
@@ -122,6 +122,12 @@ int main(void) {
 		#undef is_pressed
 		#undef was_pressed
 
+		x = adc_read(ADC_MUX_PIN_D4);
+		y = adc_read(ADC_MUX_PIN_D7);
+
+		mouse_move(x, y);
+		usb_mouse_send();
+
 		// send the USB report (even if nothing's changed)
 		usb_keyboard_send();
 		usb_extra_consumer_send();
@@ -138,12 +144,6 @@ int main(void) {
 		else { kb_led_compose_off(); }
 		if (keyboard_leds & (1<<4)) { kb_led_kana_on(); }
 		else { kb_led_kana_off(); }
-*/
-		x = adc_read(ADC_MUX_PIN_D4);
-		y = adc_read(ADC_MUX_PIN_D7);
-
-		mouse_move(x, y);
-		usb_mouse_send();
 
 	}
 

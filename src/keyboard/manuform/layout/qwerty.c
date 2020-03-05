@@ -29,17 +29,17 @@ _esc,           _1,     _2,             _3,             _4,     _5,
 _tab,           _Q,     _W,             _E,             _R,     _T,
 _shiftL,        _A,     _S,             _D,             _F,     _G,
 _guiL,          _Z,     _X,             _C,             _V,     _B,
-                        _backslash,     _equal,         _bs,    _del,
-                                                        1,      _home,
-                                                        _ctrlL, _altL,
+                        _grave,     _equal,         _bs,    _ctrlL,
+                                                        1,      _altL,
+                                                        _home, _end,
 // right hand
 _6,             _7,             _8,             _9,             _0,             _dash,
-_Y,             _U,             _I,             _O,             _P,             _grave,
+_Y,             _U,             _I,             _O,             _P,             _backslash,
 _H,             _J,             _K,             _L,             _semicolon,     _quote,
 _N,             _M,             _comma,         _period,        _slash,         _shiftR,
 _enter,         _space,         _bracketL,      _bracketR,
-_arrowU,        _arrowR,
-_arrowL,        _arrowD),
+_arrowU,        _arrowD,
+_arrowL,        _arrowR),
 
 
 	KB_MATRIX_LAYER(  // layout: layer 1: function and symbol keys
@@ -56,7 +56,7 @@ _arrowL,        _arrowD),
 // right hand
 _F6,             _F7,           _F8,            _F9,             _F10,     _power,
 0,              0,              0,              0,               0,        0,
-0,              _mouseLeft,     _mouseMiddle,   _mouseRight,               0,        0,
+0,              _mouseLeft,     _mouseMiddle,   _mouseRight,     0,        0,
 0,              0,              0,              0,               0,        0,
 _prevTrack,     _volDown,       _volUp,         _nextTrack,
 _play,  0,
@@ -71,19 +71,17 @@ _play,  0,
   0,  0,  0,  0,  0,  0,
   0,  0,  0,  0,  0,  0,
   0,  0,  0,  0,  0,  0,
-    0,  0,  3,  2,
-		          0,  0,
-		              0,
-		      0,
+          0,  0,  3,  2,
+		  0,  0,
+		  0,  0,
 // right hand
-          0,  0,  0,  0,  0,  0,
-          0,  0,  0,  0,  0,  0,
-          0,  0,  0,  0,  0,  0,
-          0,  0,  0,  0,  0,  0,
-	      0,  0,  0,  0,
-  0,  0,
-  0,
-  0 ),
+0,  0,  0,  0,  0,  0,
+0,  0,  0,  0,  0,  0,
+0,  0,  0,  0,  0,  0,
+0,  0,  0,  0,  0,  0,
+0,  0,  0,  0,
+0,  0,
+0,  0 ),
 
 };
 
@@ -95,7 +93,7 @@ _play,  0,
 // basic
 #define  kprrel  &kbfun_press_release
 #define  mprrel  &kbfun_mediakey_press_release
-#define  mousebtn &mouse_button_press_release
+#define  mouseb  &mouse_button_press_release
 #define  ktog    &kbfun_toggle
 #define  ktrans  &kbfun_transparent
 // --- layer push/pop functions
@@ -173,7 +171,7 @@ NULL,
 // right hand
                 kprrel, kprrel, kprrel, kprrel, kprrel, kprrel,
                 ktrans, ktrans, ktrans, ktrans, ktrans, ktrans,
-                ktrans, mousebtn, mousebtn, mousebtn, ktrans, ktrans,
+                ktrans, mouseb,  mouseb,  mouseb,  ktrans, ktrans,
                 ktrans, ktrans, ktrans, ktrans, ktrans, ktrans,
                         mprrel, mprrel, mprrel, mprrel,
  mprrel, ktrans,
@@ -248,7 +246,7 @@ NULL,
 // right hand
                 kprrel, kprrel, kprrel, kprrel, kprrel, kprrel,
                 ktrans, kprrel,sshprre,sshprre, kprrel, kprrel,
-                kprrel, mousebtn,mousebtn,mousebtn,sshprre, kprrel,
+                kprrel, mouseb, mouseb, mouseb, sshprre, kprrel,
                sshprre, ktrans, ktrans, ktrans, ktrans, kprrel,
                         mprrel, mprrel, mprrel, mprrel,
  mprrel, ktrans,

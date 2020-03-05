@@ -195,8 +195,8 @@ int8_t _set_mouse_freq(int8_t in) {
 void _kbfun_mouse_move(uint16_t yin, uint16_t xin) {
 	int8_t x, y, movex, movey;
 
-	y = _map_mouse_input_value(yin-10);
-	x = _map_mouse_input_value(xin-50);
+	y = _map_mouse_input_value(yin);
+	x = _map_mouse_input_value(xin);
 
 	if ((x == 0 ) && y == 0) {
 		mouse_position[0] = 0;

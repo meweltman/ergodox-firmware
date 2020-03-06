@@ -211,7 +211,7 @@ kprrel, kprrel, kprrel, kprrel, kprrel, kprrel,
 sshprr, kprrel, kprrel, kprrel, kprrel, kprrel,
 kprrel, kprrel, kprrel, kprrel, kprrel, kprrel,
                 kprrel, kprrel, kprrel, kprrel,
-                                 NULL , kprrel,
+                                lpop1 , kprrel,
                                 kprrel, kprrel,
 // right hand
 kprrel, kprrel, kprrel, kprrel, kprrel, kprrel,

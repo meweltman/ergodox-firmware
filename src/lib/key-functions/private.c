@@ -192,19 +192,34 @@ int8_t _set_mouse_freq(int8_t in) {
 	}
 }
 
+uint8_t _dead_zone = 5;
+
 void _kbfun_mouse_move(uint16_t yin, uint16_t xin) {
 	int8_t x, y, movex, movey;
 
-	y = _map_mouse_input_value(yin);
-	x = _map_mouse_input_value(xin);
+	y = _map_mouse_input_value(yin) * -1 - 1;
+	x = _map_mouse_input_value(xin) * -1 + 16;
 
-	if ((x == 0 ) && y == 0) {
+	if (fabs(x) < _dead_zone) {
+		x = 0;
+	}
+	if (fabs(y) < _dead_zone) {
+		y = 0;
+	}
+
+	if ((x == 0) && y == 0) {
 		mouse_position[0] = 0;
 		mouse_position[1] = 0;
 		mouse_position[2] = 0;
 		return;
 	}
-	
+
+	double r = sqrt(pow(x, 2.0) + pow(y, 2.0));
+	// small twist
+	double a = atan2(y, x) - 1.2;
+	x = floor(r * cos(a));
+	y = floor(r * sin(a));
+
 	movex = _map_mouse_move(x);
 	movey = _map_mouse_move(y);
 

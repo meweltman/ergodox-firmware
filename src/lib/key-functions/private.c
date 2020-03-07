@@ -9,6 +9,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include <util/delay.h>
 #include <math.h>
 #include "../../lib-other/pjrc/usb_keyboard/usb_keyboard.h"
 #include "../../lib/usb/usage-page/keyboard.h"
@@ -156,19 +157,16 @@ void _kbfun_mousebutton_press_release(bool press, uint8_t buttoncode) {
 }
 
 bool _mouse_scroll_lock=false;
-uint8_t _freq_counter = 20,
-        _freq_scalar = 20 ,
-		_move_scalar = 10,
-		_input_scalar = 100;
+uint8_t _move_scalar = 12,
+		_input_scalar = 100,
+		_dead_zone = 5;
 
 void _kbfun_toggle_mouse_scroll_lock(bool lock) {
 	_mouse_scroll_lock = lock;
 	if (lock) {
-		_freq_scalar = 20;
-		_move_scalar = 2;
+		_move_scalar = 6;
 	} else {
-		_freq_scalar = 10;
-		_move_scalar = 5;
+		_move_scalar = 12;
 	}
 }
 
@@ -180,24 +178,10 @@ int8_t _map_mouse_move(int8_t in) {
 	return floor(in/(_input_scalar * 1.0f) * _move_scalar);
 }
 
-int8_t _set_mouse_freq(int8_t in) {
-	int8_t value = round(in/(_input_scalar * 1.0f) * _freq_scalar);
-	_freq_counter = fmax(_freq_scalar - fabs(value), _freq_counter);
-	if (value > 0) {
-		return 1;
-	} else if (value < 0) {
-		return -1;
-	} else {
-		return 0;
-	}
-}
-
-uint8_t _dead_zone = 5;
-
 void _kbfun_mouse_move(uint16_t yin, uint16_t xin) {
 	int8_t x, y, movex, movey;
 
-	y = _map_mouse_input_value(yin) * -1 - 1;
+	y = _map_mouse_input_value(yin) * -1;
 	x = _map_mouse_input_value(xin) * -1 + 16;
 
 	if (fabs(x) < _dead_zone) {
@@ -212,6 +196,14 @@ void _kbfun_mouse_move(uint16_t yin, uint16_t xin) {
 		mouse_position[1] = 0;
 		mouse_position[2] = 0;
 		return;
+	} else if (_mouse_scroll_lock) {
+		_delay_ms(100);
+		movex = _map_mouse_move(x);
+		movey = _map_mouse_move(y);
+		mouse_position[0] = 0;
+		mouse_position[1] = 0;
+		mouse_position[2] = movey;
+		return;
 	}
 
 	double r = sqrt(pow(x, 2.0) + pow(y, 2.0));
@@ -223,13 +215,7 @@ void _kbfun_mouse_move(uint16_t yin, uint16_t xin) {
 	movex = _map_mouse_move(x);
 	movey = _map_mouse_move(y);
 
-	if (_mouse_scroll_lock) {
-		mouse_position[0] = 0;
-		mouse_position[1] = 0;
-		mouse_position[2] = movey * -1;
-	} else {
-		mouse_position[0] = movex;
-		mouse_position[1] = movey * -1;
-		mouse_position[2] = 0;
-	}
+	mouse_position[0] = movex;
+	mouse_position[1] = movey * -1;
+	mouse_position[2] = 0;
 }

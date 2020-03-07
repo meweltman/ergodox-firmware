@@ -46,18 +46,18 @@ _arrowL, _arrowR),
 // unused
 0,
 // left hand
-0,      _F1,    _F2,    _F3,    _F4,    _F5,
-0,      0,      0,      0,      0,      0,
-0,      0,      0,      0,      0,      0,
-0,      0,      0,      0,      0,      0,
-                0,      0,      0,      0,
-                                1,      2,
-                                0,      0,
+1,                   _F1,    _F2,    _F3,    _F4,    _F5,
+0,                   0,      0,      0,      0,      0,
+0,      _mouseScrollOn,      0,      0,      0,      0,
+0,                   0,      0,      0,      0,      0,
+                             0,      0,      0,      0,
+                                             1,      2,
+                                             0,      0,
 // right hand
 _F6,             _F7,           _F8,            _F9,             _F10,     _power,
 0,              0,              0,              0,               0,        0,
-0,              _mouseLeft,     _mouseMiddle,   _mouseRight,     0,        0,
-0,              0,              0,              0,               0,        0,
+0,              0,              _mouseMiddle,   _mouseRight,     0,        0,
+0,              _mouseLeft,     0,              0,               0,        0,
 _prevTrack,     _volDown,       _volUp,         _nextTrack,
 _play,  0,
 0,      0 ),
@@ -94,6 +94,8 @@ _play,  0,
 #define  kprrel  &kbfun_press_release
 #define  mprrel  &kbfun_mediakey_press_release
 #define  mouseb  &mouse_button_press_release
+#define  mouses  &mouse_scroll_lock_press
+#define  mouseo  &mouse_scroll_lock_release
 #define  ktog    &kbfun_toggle
 #define  ktrans  &kbfun_transparent
 // --- layer push/pop functions
@@ -158,9 +160,9 @@ kprrel, kprrel ),
 // unused
 NULL,
 // left hand
-  NULL, kprrel, kprrel, kprrel, kprrel, kprrel,
+dbtldr, kprrel, kprrel, kprrel, kprrel, kprrel,
 ktrans, ktrans, ktrans, ktrans, ktrans, ktrans,
-ktrans, ktrans, ktrans, ktrans, ktrans, ktrans,
+ktrans, mouses, ktrans, ktrans, ktrans, ktrans,
 ktrans, ktrans, ktrans, ktrans, ktrans, ktrans,
                 ktrans, ktrans, ktrans, ktrans,
                                 lpop1 , lpush2,
@@ -168,8 +170,8 @@ ktrans, ktrans, ktrans, ktrans, ktrans, ktrans,
 // right hand
 kprrel, kprrel, kprrel, kprrel, kprrel, kprrel,
 ktrans, ktrans, ktrans, ktrans, ktrans, ktrans,
-ktrans, mouseb, mouseb, mouseb, ktrans, ktrans,
-ktrans, ktrans, ktrans, ktrans, ktrans, ktrans,
+ktrans, ktrans, mouseb, mouseb, ktrans, ktrans,
+ktrans, mouseb, ktrans, ktrans, ktrans, ktrans,
 mprrel, mprrel, mprrel, mprrel,
 mprrel, ktrans,
 ktrans, ktrans ),
@@ -227,9 +229,9 @@ kprrel, kprrel ),
 // unused
 NULL,
 // left hand
-  NULL, kprrel, kprrel, kprrel, kprrel, kprrel,
+dbtldr, kprrel, kprrel, kprrel, kprrel, kprrel,
 ktrans, ktrans, ktrans, ktrans, ktrans, ktrans,
-ktrans, ktrans, ktrans, ktrans, ktrans, ktrans,
+ktrans, mouseo, ktrans, ktrans, ktrans, ktrans,
 ktrans, ktrans, ktrans, ktrans, ktrans, ktrans,
                 ktrans, ktrans, ktrans, ktrans,
                                 lpop1 ,   NULL,
@@ -237,8 +239,8 @@ ktrans, ktrans, ktrans, ktrans, ktrans, ktrans,
 // right hand
 kprrel, kprrel, kprrel, kprrel, kprrel, kprrel,
 ktrans, ktrans, ktrans, ktrans, ktrans, ktrans,
-ktrans, mouseb, mouseb, mouseb, ktrans, ktrans,
-ktrans, ktrans, ktrans, ktrans, ktrans, ktrans,
+ktrans, ktrans, mouseb, mouseb, ktrans, ktrans,
+ktrans, mouseb, ktrans, ktrans, ktrans, ktrans,
 mprrel, mprrel, mprrel, mprrel,
 mprrel, ktrans,
 ktrans, ktrans ),

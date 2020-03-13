@@ -176,8 +176,8 @@ int8_t _map_mouse_move(int8_t in) {
 void _kbfun_mouse_move(uint16_t yin, uint16_t xin) {
 	int8_t x, y, movex, movey;
 
-	y = _map_mouse_input_value(yin) * -1 - 1;
-	x = _map_mouse_input_value(xin) * -1 + 13;
+	y = _map_mouse_input_value(yin) * -1 - 3;
+	x = _map_mouse_input_value(xin) * -1 + 12;
 
 	if (fabs(x) < _dead_zone) {
 		x = 0;
@@ -203,7 +203,7 @@ void _kbfun_mouse_move(uint16_t yin, uint16_t xin) {
 
 	double r = sqrt(pow(x, 2.0) + pow(y, 2.0));
 	// small twist
-	double a = atan2(y, x) - 1.2;
+	double a = atan2(y, x) - 0.8;
 	x = floor(r * cos(a));
 	y = floor(r * sin(a));
 

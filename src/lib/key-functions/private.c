@@ -157,12 +157,16 @@ void _kbfun_mousebutton_press_release(bool press, uint8_t buttoncode) {
 }
 
 bool _mouse_scroll_lock=false;
-uint8_t _move_scalar = 10,
+uint8_t _move_scalar = 15,
 		_input_scalar = 100,
-		_dead_zone = 2;
+		_dead_zone = 4;
 
 void _kbfun_toggle_mouse_scroll_lock(bool lock) {
 	_mouse_scroll_lock = lock;
+}
+
+void _kbfun_flip_mouse_scroll_lock() {
+	_mouse_scroll_lock = !_mouse_scroll_lock;
 }
 
 int8_t _map_mouse_input_value(int16_t in) {
@@ -170,14 +174,14 @@ int8_t _map_mouse_input_value(int16_t in) {
 }
 
 int8_t _map_mouse_move(int8_t in) {
-	return floor((in/(_input_scalar * 1.0f) * _move_scalar) * 2.2);
+	return floor((in/(_input_scalar * 1.0f) * _move_scalar) * 2.8);
 }
 
 void _kbfun_mouse_move(uint16_t yin, uint16_t xin) {
 	int8_t x, y, movex, movey;
 
-	y = _map_mouse_input_value(yin) * -1 - 3;
-	x = _map_mouse_input_value(xin) * -1 + 12;
+	y = _map_mouse_input_value(yin) * -1 - 2;
+	x = _map_mouse_input_value(xin) * -1 + 11;
 
 	if (fabs(x) < _dead_zone) {
 		x = 0;

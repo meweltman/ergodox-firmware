@@ -168,6 +168,10 @@ void mouse_button_press_release(void) {
 	_kbfun_mousebutton_press_release(IS_PRESSED, buttoncode);
 }
 
+void mouse_scroll_lock_toggle(void) {
+	_kbfun_flip_mouse_scroll_lock();
+}
+
 void mouse_scroll_lock_press(void) {
 	_kbfun_toggle_mouse_scroll_lock(true);
 }

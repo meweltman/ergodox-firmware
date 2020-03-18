@@ -96,6 +96,7 @@ _prevTrack, _nextTrack),
 #define  mouseb  &mouse_button_press_release
 #define  mouses  &mouse_scroll_lock_press
 #define  mouseo  &mouse_scroll_lock_release
+#define  mousst  &mouse_scroll_lock_toggle
 #define  ktog    &kbfun_toggle
 #define  ktrans  &kbfun_transparent
 // --- layer push/pop functions
@@ -230,7 +231,7 @@ lpop1 , kprrel ),
 NULL,
 // left hand
 dbtldr, kprrel, kprrel, kprrel, kprrel, kprrel,
-NULL  , NULL , NULL  , kprrel, NULL  , NULL  ,
+NULL  , NULL  , NULL  , kprrel, NULL  , NULL  ,
 ktrans, mouseo, kprrel, kprrel, kprrel, NULL  ,
 ktrans, NULL  , NULL  , NULL  , NULL  , NULL  ,
                 NULL  , NULL  , NULL  , NULL  ,

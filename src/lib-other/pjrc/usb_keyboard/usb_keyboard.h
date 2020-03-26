@@ -11,7 +11,7 @@ int8_t usb_keyboard_send(void);
 
 int8_t usb_mouse_send(void);
 
-extern int8_t mouse_position[3];
+extern int8_t mouse_position[4];
 extern uint8_t mouse_buttons;
 
 extern uint8_t keyboard_modifier_keys;

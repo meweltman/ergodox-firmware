@@ -199,6 +199,13 @@ static const uint8_t PROGMEM mouse_hid_report_desc[] = {
 	0x09, 0x38,			//   Usage (Wheel)
 	0x95, 0x01,			//   Report Count (1),
 	0x81, 0x06,			//   Input (Data, Variable, Relative)
+	0x05, 0x0c,         //   USAGE PAGE (Consumer Devices)
+	0x0a, 0x38, 0x02,   //   USAGE (AC Pan)
+	0x15, 0x81,         //   LOGICAL_MINIMUM (-127)
+	0x25, 0x7f,         //   LOGICAL_MAXIMUM (127)
+	0x75, 0x08,         //   REPORT_SIZE (8)
+	0x95, 0x01,         //   REPORT_COUNT (1)
+	0x81, 0x06,         //   INPUT (Data, Var, Rel)
 	0xC0				// End Collection
 };
 
@@ -373,7 +380,7 @@ static volatile uint8_t usb_configuration=0;
 // which buttons are currently pressed
 uint8_t mouse_buttons=0;
 
-int8_t mouse_position[3]={0,0,0};
+int8_t mouse_position[4]={0,0,0,0};
 // protocol setting from the host.  We use exactly the same report
 // either way, so this variable only stores the setting since we
 // are required to be able to report which setting is in use.
@@ -529,6 +536,7 @@ int8_t usb_mouse_send(void)
 	UEDATX = mouse_position[0];
 	UEDATX = mouse_position[1];
 	UEDATX = mouse_position[2];
+	UEDATX = mouse_position[3];
 	UEINTX = 0x3A;
 	SREG = intr_state;
 	return 0;

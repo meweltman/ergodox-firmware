@@ -157,7 +157,8 @@ void _kbfun_mousebutton_press_release(bool press, uint8_t buttoncode) {
 }
 
 bool _mouse_scroll_lock=false;
-uint8_t _move_scalar = 15,
+uint8_t _move_scalar = 40,
+        _scroll_scalar = 6,
 		_input_scalar = 100,
 		_dead_zone = 4;
 
@@ -174,13 +175,14 @@ int8_t _map_mouse_input_value(int16_t in) {
 }
 
 int8_t _map_mouse_move(int8_t in) {
-	return floor((in/(_input_scalar * 1.0f) * _move_scalar) * 2.8);
+	uint8_t scalar = _mouse_scroll_lock ? _scroll_scalar : _move_scalar;
+	return floor((in/(_input_scalar * 1.0f) * scalar));
 }
 
 void _kbfun_mouse_move(uint16_t yin, uint16_t xin) {
 	int8_t x, y, movex, movey;
 
-	y = _map_mouse_input_value(yin) * -1 - 2;
+	y = _map_mouse_input_value(yin) * -1 - 3;
 	x = _map_mouse_input_value(xin) * -1 + 11;
 
 	if (fabs(x) < _dead_zone) {
@@ -195,24 +197,25 @@ void _kbfun_mouse_move(uint16_t yin, uint16_t xin) {
 		mouse_position[1] = 0;
 		mouse_position[2] = 0;
 		return;
-	} else if (_mouse_scroll_lock) {
-		_delay_ms(100);
-		movex = _map_mouse_move(x);
-		movey = _map_mouse_move(y);
-		mouse_position[0] = 0;
-		mouse_position[1] = 0;
-		mouse_position[2] = movey;
-		return;
 	}
-
+	
 	double r = sqrt(pow(x, 2.0) + pow(y, 2.0));
 	// small twist
 	double a = atan2(y, x) - 0.8;
 	x = floor(r * cos(a));
 	y = floor(r * sin(a));
-
-	movex = _map_mouse_move(x);
+	
 	movey = _map_mouse_move(y);
+	movex = _map_mouse_move(x);
+	
+	if (_mouse_scroll_lock) {
+		_delay_ms(100);
+		mouse_position[0] = 0;
+		mouse_position[1] = 0;
+		mouse_position[2] = movey;
+		mouse_position[3] = movex;
+		return;
+	}
 
 	mouse_position[0] = movex;
 	mouse_position[1] = movey * -1;

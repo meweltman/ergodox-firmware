@@ -158,7 +158,7 @@ void _kbfun_mousebutton_press_release(bool press, uint8_t buttoncode) {
 
 bool _mouse_scroll_lock=false;
 uint8_t _move_scalar = 40,
-        _scroll_scalar = 6,
+        _scroll_scalar = 15,
 		_input_scalar = 100,
 		_dead_zone = 4;
 
@@ -192,10 +192,12 @@ void _kbfun_mouse_move(uint16_t yin, uint16_t xin) {
 		y = 0;
 	}
 
+	mouse_position[0] = 0;
+	mouse_position[1] = 0;
+	mouse_position[2] = 0;
+	mouse_position[3] = 0;
+
 	if ((x == 0) && y == 0) {
-		mouse_position[0] = 0;
-		mouse_position[1] = 0;
-		mouse_position[2] = 0;
 		return;
 	}
 	
@@ -210,14 +212,11 @@ void _kbfun_mouse_move(uint16_t yin, uint16_t xin) {
 	
 	if (_mouse_scroll_lock) {
 		_delay_ms(100);
-		mouse_position[0] = 0;
-		mouse_position[1] = 0;
-		mouse_position[2] = movey;
 		mouse_position[3] = movex;
+		mouse_position[2] = movey;
 		return;
 	}
 
 	mouse_position[0] = movex;
 	mouse_position[1] = movey * -1;
-	mouse_position[2] = 0;
 }

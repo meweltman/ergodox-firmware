@@ -308,8 +308,8 @@
 #define _mouseLeft			MOUSE_LEFT
 #define _mouseRight			MOUSE_RIGHT
 #define _mouseMiddle		MOUSE_MIDDLE
-#define _mouseScrollOn		MOUSE_SCROLL_ON
-#define _mouseScrollOff		MOUSE_SCROLL_OFF
+#define _mouseScrollX		MOUSE_SCROLL_X
+#define _mouseScrollY		MOUSE_SCROLL_Y
 
 // media
 #define _prevTrack MEDIAKEY_PREV_TRACK

@@ -282,8 +282,8 @@
 #define MOUSE_LEFT			0x01
 #define MOUSE_RIGHT			0x02
 #define MOUSE_MIDDLE		0x04
-#define MOUSE_SCROLL_ON		0x01
-#define MOUSE_SCROLL_OFF	0x00
+#define MOUSE_SCROLL_Y		0x01
+#define MOUSE_SCROLL_X		0x02
 
 
 // ----------------------------------------------------------------------------

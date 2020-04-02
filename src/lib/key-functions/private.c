@@ -201,6 +201,15 @@ int8_t _map_mouse_move(int8_t in) {
 void _kbfun_mouse_move(uint16_t yin, uint16_t xin) {
 	int8_t x, y, movex, movey;
 
+	mouse_position[0] = 0;
+	mouse_position[1] = 0;
+	mouse_position[2] = 0;
+	mouse_position[3] = 0;
+
+	if (main_layers_peek(0) == 0) {
+		return;
+	}
+
 	y = _map_mouse_input_value(yin) * -1 - 3;
 	x = _map_mouse_input_value(xin) * -1 + 11;
 
@@ -210,11 +219,6 @@ void _kbfun_mouse_move(uint16_t yin, uint16_t xin) {
 	if (fabs(y) < _dead_zone) {
 		y = 0;
 	}
-
-	mouse_position[0] = 0;
-	mouse_position[1] = 0;
-	mouse_position[2] = 0;
-	mouse_position[3] = 0;
 
 	if (x == 0 && y == 0) {
 		return;

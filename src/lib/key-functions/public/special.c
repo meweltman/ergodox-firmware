@@ -168,9 +168,9 @@ void mouse_button_press_release(void) {
 	_kbfun_mousebutton_press_release(IS_PRESSED, buttoncode);
 }
 
-void mouse_scroll_lock_press_release(void) {
-	uint8_t lockcode = kb_layout_get(LAYER, ROW, COL);
-	_kbfun_mouse_scroll_lock_press_release(IS_PRESSED, lockcode);
+void mouse_modifier_press_release(void) {
+	uint8_t modifiercode = kb_layout_get(LAYER, ROW, COL);
+	_kbfun_mouse_modifier_press_release(IS_PRESSED, modifiercode);
 }
 
 void mouse_move(uint16_t x, uint16_t y) {

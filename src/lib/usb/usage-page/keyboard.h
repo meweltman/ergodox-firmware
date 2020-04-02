@@ -284,6 +284,7 @@
 #define MOUSE_MIDDLE		0x04
 #define MOUSE_SCROLL_Y		0x01
 #define MOUSE_SCROLL_X		0x02
+#define MOUSE_SLOW			0x04
 
 
 // ----------------------------------------------------------------------------

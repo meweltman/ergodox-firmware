@@ -23,7 +23,7 @@
 	bool _kbfun_is_pressed        (uint8_t keycode);
 	void _kbfun_mediakey_press_release (bool press, uint8_t keycode);
 	void _kbfun_mousebutton_press_release(bool press, uint8_t buttoncode);
-	void _kbfun_mouse_scroll_lock_press_release(bool press, uint8_t lockcode);
+	void _kbfun_mouse_modifier_press_release(bool press, uint8_t lockcode);
 	void _kbfun_mouse_move(uint16_t x, uint16_t y);
 
 #endif

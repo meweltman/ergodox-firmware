@@ -310,6 +310,7 @@
 #define _mouseMiddle		MOUSE_MIDDLE
 #define _mouseScrollX		MOUSE_SCROLL_X
 #define _mouseScrollY		MOUSE_SCROLL_Y
+#define _mouseSlow			MOUSE_SLOW
 
 // media
 #define _prevTrack MEDIAKEY_PREV_TRACK

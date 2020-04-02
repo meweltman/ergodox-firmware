@@ -160,22 +160,30 @@ uint8_t _move_scalar = 40,
 		_scroll_scalar = 15,
 		_input_scalar = 100,
 		_dead_zone = 4,
-		_mouse_scroll_lock = 0;
+		_mouse_modifier = 0;
 
-void _kbfun_mouse_scroll_lock_press_release(bool press, uint8_t lockcode) {
+void _kbfun_mouse_modifier_press_release(bool press, uint8_t modifiercode) {
 	if (press) {
-		_mouse_scroll_lock |= lockcode;
+		_mouse_modifier |= modifiercode;
 	} else {
-		_mouse_scroll_lock &= ~lockcode;
+		_mouse_modifier &= ~modifiercode;
 	}
 }
 
+bool modifierEnabled(uint8_t modifier) {
+	return (_mouse_modifier & modifier) == modifier;
+}
+
 bool scrollX() {
-	return (_mouse_scroll_lock & MOUSE_SCROLL_X) == MOUSE_SCROLL_X;
+	return modifierEnabled(MOUSE_SCROLL_X);
 }
 
 bool scrollY() {
-	return (_mouse_scroll_lock & MOUSE_SCROLL_Y) == MOUSE_SCROLL_Y;
+	return modifierEnabled(MOUSE_SCROLL_Y);
+}
+
+bool slow() {
+	return modifierEnabled(MOUSE_SLOW);
 }
 
 int8_t _map_mouse_input_value(int16_t in) {
@@ -184,6 +192,9 @@ int8_t _map_mouse_input_value(int16_t in) {
 
 int8_t _map_mouse_move(int8_t in) {
 	uint8_t scalar = scrollX() || scrollY() ? _scroll_scalar : _move_scalar;
+	if (slow()) {
+		scalar = scalar / 4;
+	}
 	return floor((in/(_input_scalar * 1.0f) * scalar));
 }
 
@@ -219,7 +230,7 @@ void _kbfun_mouse_move(uint16_t yin, uint16_t xin) {
 	movex = _map_mouse_move(x);
 
 
-	if (_mouse_scroll_lock > 0) {
+	if (scrollX() || scrollY()) {
 		_delay_ms(100);
 		if (scrollX()) {
 			mouse_position[3] = movex;

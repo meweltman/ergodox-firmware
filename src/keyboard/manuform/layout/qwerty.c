@@ -48,8 +48,8 @@ _mouseLeft, _guiR,
 // left hand
 1,    _F1,            _F2,     _F3,     _F4,    _F5,
 0,    _mouseScrollX,  0,       _arrowU, 0,       0,
-0,    _mouseScrollY,  _arrowL, _arrowD, _arrowR, 0,
-0,    0,              0,       0,       0,      0,
+0,    _mouseScrollY,  _arrowL, _arrowD, _arrowR, _mouseSlow,
+0,    _mouseSlow,     0,       0,       0,      0,
                       0,       0,       0,      0,
                                         0,      0,
                                         0,      0,
@@ -94,7 +94,7 @@ _prevTrack, _nextTrack),
 #define  kprrel  &kbfun_press_release
 #define  mprrel  &kbfun_mediakey_press_release
 #define  mouseb  &mouse_button_press_release
-#define  mouses  &mouse_scroll_lock_press_release
+#define  mouses  &mouse_modifier_press_release
 #define  ktog    &kbfun_toggle
 #define  ktrans  &kbfun_transparent
 // --- layer push/pop functions
@@ -161,8 +161,8 @@ NULL,
 // left hand
 dbtldr, kprrel, kprrel, kprrel, kprrel, kprrel,
 NULL  , mouses, NULL  , kprrel, NULL  , NULL  ,
-ktrans, mouses, kprrel, kprrel, kprrel, NULL  ,
-ktrans, NULL  , NULL  , NULL  , NULL  , NULL  ,
+ktrans, mouses, kprrel, kprrel, kprrel, mouses,
+ktrans, mouses, NULL  , NULL  , NULL  , NULL  ,
                 NULL  , NULL  , NULL  , NULL  ,
                                 lpop1 , ktrans,
                                 NULL  , NULL  ,
@@ -230,8 +230,8 @@ NULL,
 // left hand
 dbtldr, kprrel, kprrel, kprrel, kprrel, kprrel,
 NULL  , mouses, NULL  , kprrel, NULL  , NULL  ,
-ktrans, mouses, kprrel, kprrel, kprrel, NULL  ,
-ktrans, NULL  , NULL  , NULL  , NULL  , NULL  ,
+ktrans, mouses, kprrel, kprrel, kprrel, mouses,
+ktrans, mouses, NULL  , NULL  , NULL  , NULL  ,
                 NULL  , NULL  , NULL  , NULL  ,
                                 NULL  , ktrans,
                                 NULL  , NULL  ,

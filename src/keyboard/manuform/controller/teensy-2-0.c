@@ -53,22 +53,24 @@
  */
 
 // --- unused
-#define  UNUSED_0  C, 7
-#define  UNUSED_1  D, 7
-#define  UNUSED_2  D, 4  // hard to use with breadboard (on the end)
-#define  UNUSED_3  D, 5  // hard to use with breadboard (on the end)
-#define  UNUSED_4  E, 6  // hard to use with breadboard (internal)
+#define  UNUSED_0  F, 5
+#define  UNUSED_1  D, 7  // using for mouse
+#define  UNUSED_2  D, 4  // using for mouse
+#define  UNUSED_3  F, 4
+#define  UNUSED_4  F, 1
+#define  UNUSED_5  F, 7
+#define  UNUSED_6  F, 6
 
 // --- rows
-#define  ROW_0  F, 7
-#define  ROW_1  F, 6
-#define  ROW_2  F, 5
-#define  ROW_3  F, 4
-#define  ROW_4  F, 1
+#define  ROW_0  B, 7
+#define  ROW_1  B, 0
+#define  ROW_2  C, 7
+#define  ROW_3  D, 5
+#define  ROW_4  E, 6
 #define  ROW_5  F, 0
 
 // --- columns
-#define  COLUMN_7  B, 0
+// #define  COLUMN_7  B, 0
 #define  COLUMN_8  B, 1
 #define  COLUMN_9  B, 2
 #define  COLUMN_A  B, 3
@@ -112,7 +114,7 @@
 
 #define  teensypin_write_all_column(register, operation)		\
 	do {								\
-		teensypin_write(register, operation, COLUMN_7);		\
+		/* teensypin_write(register, operation, COLUMN_7); */		\
 		teensypin_write(register, operation, COLUMN_8);		\
 		teensypin_write(register, operation, COLUMN_9);		\
 		teensypin_write(register, operation, COLUMN_A);		\
@@ -145,7 +147,7 @@
 		/* set row low (set as output) */			\
 		teensypin_write(DDR, SET, ROW_##row);			\
 		/* read columns 7..D and update matrix */		\
-		matrix[0x##row][0x7] = ! teensypin_read(COLUMN_7);	\
+		/* matrix[0x##row][0x7] = ! teensypin_read(COLUMN_7); */	\
 		matrix[0x##row][0x8] = ! teensypin_read(COLUMN_8);	\
 		matrix[0x##row][0x9] = ! teensypin_read(COLUMN_9);	\
 		matrix[0x##row][0xA] = ! teensypin_read(COLUMN_A);	\

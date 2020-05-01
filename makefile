@@ -21,81 +21,13 @@
 
 include src/makefile-options
 
-# which layouts to compile (will override the variable in src/makefile-options)
-# --- default
-LAYOUT := qwerty
-# --- all
-LAYOUTS := qwerty
-
-# system specific stuff
-UNAME := $(shell uname)
-ifeq ($(UNAME),Darwin)
-	DATE_PROG := gdate
-else
-	DATE_PROG := date
-endif
-
-CURRENT_DATE := $(shell $(DATE_PROG) --rfc-3339 s)
-
-# git info
-GIT_BRANCH := $(shell git branch -l | grep '*' | cut -c 3-)
-GIT_COMMIT_DATE := $(shell git log -n 1 --pretty --date=iso | grep 'Date' | cut -c 9- )
-GIT_COMMIT_ID := $(shell git log -n 1 | grep 'commit' | cut -c 8-)
-
-# name to use for the final distribution file or package
-TARGET := ergodox-firmware--$(GIT_BRANCH)--$(shell $(DATE_PROG) -d "$(GIT_COMMIT_DATE)" +'%Y%m%dT%H%M%S')--$(shell echo $(GIT_COMMIT_ID) | cut -c 1-7)--$(LAYOUT)
-
-# directories
-BUILD := build
-ROOT := $(BUILD)/$(TARGET)
-
 # -----------------------------------------------------------------------------
 # -----------------------------------------------------------------------------
 
-.PHONY: all clean checkin build-dir firmware dist zip zip-all
-
-all: dist
+.PHONY: build
 
 build:
 	docker build -t ergodox-firmware .
 	docker create -ti --name helper ergodox-firmware bash
 	docker cp helper:/src/firmware.hex ${PWD}/firmware.hex
 	docker rm helper
-
-clean:
-	git clean -dfX  # remove ignored files and directories
-	-rm -r '$(BUILD)'
-
-checkin:
-	-git commit -a
-
-build-dir:
-	-rm -r '$(BUILD)/$(TARGET)'*
-	-mkdir -p '$(BUILD)/$(TARGET)'
-
-firmware:
-	cd src; $(MAKE) LAYOUT=$(LAYOUT) all
-
-$(ROOT)/firmware.%: firmware
-	cp 'src/firmware.$*' '$@'
-
-
-dist: \
-	checkin \
-	build-dir \
-	$(ROOT)/firmware.hex \
-	$(ROOT)/firmware.eep \
-	$(ROOT)/firmware.map \
-	# $(ROOT)/firmware--ui-info.json \
-	# $(ROOT)/firmware--layout.html
-
-zip: dist
-	( cd '$(BUILD)/$(TARGET)'; \
-	  zip '../$(TARGET).zip' \
-	      -r * .* \
-	      -x '..*' )
-
-zip-all:
-	for layout in $(LAYOUTS); do \
-		make LAYOUT=$$layout zip; \
-	done

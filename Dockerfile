@@ -4,5 +4,6 @@ RUN apt-get update && apt-get install gcc-avr binutils-avr avr-libc git make vim
 WORKDIR /
 
 COPY . .
-RUN make clean
-RUN make firmware
+
+WORKDIR /src
+RUN make

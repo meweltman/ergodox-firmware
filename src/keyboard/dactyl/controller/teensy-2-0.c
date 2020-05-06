@@ -15,18 +15,10 @@
 #include <avr/io.h>
 #include <util/delay.h>
 #include "../../../lib/twi.h"
-#include "../options.h"
 #include "../matrix.h"
 #include "./teensy-2-0--functions.h"
 #include "./teensy-2-0--led.h"
 
-// ----------------------------------------------------------------------------
-
-// check options
-#if  (TEENSY__DRIVE_ROWS && TEENSY__DRIVE_COLUMNS)	\
- || !(TEENSY__DRIVE_ROWS || TEENSY__DRIVE_COLUMNS)
-	#error "See 'Pin drive direction' in 'options.h'"
-#endif
 // ----------------------------------------------------------------------------
 
 // processor frequency (from <http://www.pjrc.com/teensy/prescaler.html>)
@@ -125,21 +117,6 @@
 /*
  * update macros
  */
-#define  update_rows_for_column(matrix, column)				\
-	do {								\
-		/* set column low (set as output) */			\
-		teensypin_write(DDR, SET, COLUMN_##column);		\
-		/* read rows 0..5 and update matrix */			\
-		matrix[0x0][0x##column] = ! teensypin_read(ROW_0);	\
-		matrix[0x1][0x##column] = ! teensypin_read(ROW_1);	\
-		matrix[0x2][0x##column] = ! teensypin_read(ROW_2);	\
-		matrix[0x3][0x##column] = ! teensypin_read(ROW_3);	\
-		matrix[0x4][0x##column] = ! teensypin_read(ROW_4);	\
-		matrix[0x5][0x##column] = ! teensypin_read(ROW_5);	\
-		/* set column hi-Z (set as input) */			\
-		teensypin_write(DDR, CLEAR, COLUMN_##column);		\
-	} while(0)
-
 #define  update_columns_for_row(matrix, row)				\
 	do {								\
 		/* set row low (set as output) */			\
@@ -192,13 +169,8 @@ uint8_t teensy_init(void) {
 	// rows and columns
 	teensypin_write_all_row(DDR, CLEAR);     // set as input (hi-Z)
 	teensypin_write_all_column(DDR, CLEAR);  // set as input (hi-Z)
-	#if TEENSY__DRIVE_ROWS
-		teensypin_write_all_row(PORT, CLEAR);   // pull-up disabled
-		teensypin_write_all_column(PORT, SET);  // pull-up enabled
-	#elif TEENSY__DRIVE_COLUMNS
-		teensypin_write_all_row(PORT, SET);       // pull-up enabled
-		teensypin_write_all_column(PORT, CLEAR);  // pull-up disabled
-	#endif
+	teensypin_write_all_row(PORT, CLEAR);   // pull-up disabled
+	teensypin_write_all_column(PORT, SET);  // pull-up enabled
 
 	return 0;  // success
 }
@@ -211,22 +183,12 @@ uint8_t teensy_init(void) {
 #endif
 
 uint8_t teensy_update_matrix(bool matrix[KB_ROWS][KB_COLUMNS]) {
-	#if TEENSY__DRIVE_ROWS
-		update_columns_for_row(matrix, 0);
-		update_columns_for_row(matrix, 1);
-		update_columns_for_row(matrix, 2);
-		update_columns_for_row(matrix, 3);
-		update_columns_for_row(matrix, 4);
-		update_columns_for_row(matrix, 5);
-	#elif TEENSY__DRIVE_COLUMNS
-		update_rows_for_column(matrix, 7);
-		update_rows_for_column(matrix, 8);
-		update_rows_for_column(matrix, 9);
-		update_rows_for_column(matrix, A);
-		update_rows_for_column(matrix, B);
-		update_rows_for_column(matrix, C);
-		update_rows_for_column(matrix, D);
-	#endif
+	update_columns_for_row(matrix, 0);
+	update_columns_for_row(matrix, 1);
+	update_columns_for_row(matrix, 2);
+	update_columns_for_row(matrix, 3);
+	update_columns_for_row(matrix, 4);
+	update_columns_for_row(matrix, 5);
 
 	return 0;  // success
 }

@@ -15,18 +15,9 @@
 #include <avr/io.h>
 #include <util/delay.h>
 #include "../../../lib/twi.h"
-#include "../options.h"
 #include "../matrix.h"
 #include "./teensy-2-0--functions.h"
-#include "./teensy-2-0--led.h"
 
-// ----------------------------------------------------------------------------
-
-// check options
-#if  (TEENSY__DRIVE_ROWS && TEENSY__DRIVE_COLUMNS)	\
- || !(TEENSY__DRIVE_ROWS || TEENSY__DRIVE_COLUMNS)
-	#error "See 'Pin drive direction' in 'options.h'"
-#endif
 // ----------------------------------------------------------------------------
 
 // processor frequency (from <http://www.pjrc.com/teensy/prescaler.html>)
@@ -52,14 +43,16 @@
  *   "teensy-2-0.md", and the '.svg' circuit diagram.
  */
 
+// --- joystick
+#define  JOYSTICK_0  D, 7
+#define  JOYSTICK_1  D, 4
+
 // --- unused
 #define  UNUSED_0  F, 5
-#define  UNUSED_1  D, 7  // using for mouse
-#define  UNUSED_2  D, 4  // using for mouse
-#define  UNUSED_3  F, 4
-#define  UNUSED_4  F, 1
-#define  UNUSED_5  F, 7
-#define  UNUSED_6  F, 6
+#define  UNUSED_1  F, 4
+#define  UNUSED_2  F, 1
+#define  UNUSED_3  F, 7
+#define  UNUSED_4  F, 6
 
 // --- rows
 #define  ROW_0  B, 7
@@ -70,13 +63,12 @@
 #define  ROW_5  F, 0
 
 // --- columns
-// #define  COLUMN_7  B, 0
-#define  COLUMN_8  B, 1
-#define  COLUMN_9  B, 2
-#define  COLUMN_A  B, 3
-#define  COLUMN_B  D, 2
-#define  COLUMN_C  D, 3
-#define  COLUMN_D  C, 6
+#define  COLUMN_6  B, 1
+#define  COLUMN_7  B, 2
+#define  COLUMN_8  B, 3
+#define  COLUMN_9  D, 2
+#define  COLUMN_A  D, 3
+#define  COLUMN_B  C, 6
 
 // --- helpers
 #define  SET    |=
@@ -99,7 +91,15 @@
 	do {								\
 		teensypin_write(register, operation, UNUSED_0);		\
 		teensypin_write(register, operation, UNUSED_1);		\
+		teensypin_write(register, operation, UNUSED_2);		\
+		teensypin_write(register, operation, UNUSED_3);		\
 		teensypin_write(register, operation, UNUSED_4); }	\
+	while(0)
+
+#define  teensypin_write_all_mouse(register, operation)		\
+	do {								\
+		teensypin_write(register, operation, JOYSTICK_0);		\
+		teensypin_write(register, operation, JOYSTICK_1); }	\
 	while(0)
 
 #define  teensypin_write_all_row(register, operation)		\
@@ -114,46 +114,29 @@
 
 #define  teensypin_write_all_column(register, operation)		\
 	do {								\
-		/* teensypin_write(register, operation, COLUMN_7); */		\
+		teensypin_write(register, operation, COLUMN_6);		\
+		teensypin_write(register, operation, COLUMN_7);		\
 		teensypin_write(register, operation, COLUMN_8);		\
 		teensypin_write(register, operation, COLUMN_9);		\
 		teensypin_write(register, operation, COLUMN_A);		\
-		teensypin_write(register, operation, COLUMN_B);		\
-		teensypin_write(register, operation, COLUMN_C);		\
-		teensypin_write(register, operation, COLUMN_D); }	\
+		teensypin_write(register, operation, COLUMN_B); }	\
 	while(0)
 
 
 /*
  * update macros
  */
-#define  update_rows_for_column(matrix, column)				\
-	do {								\
-		/* set column low (set as output) */			\
-		teensypin_write(DDR, SET, COLUMN_##column);		\
-		/* read rows 0..5 and update matrix */			\
-		matrix[0x0][0x##column] = ! teensypin_read(ROW_0);	\
-		matrix[0x1][0x##column] = ! teensypin_read(ROW_1);	\
-		matrix[0x2][0x##column] = ! teensypin_read(ROW_2);	\
-		matrix[0x3][0x##column] = ! teensypin_read(ROW_3);	\
-		matrix[0x4][0x##column] = ! teensypin_read(ROW_4);	\
-		matrix[0x5][0x##column] = ! teensypin_read(ROW_5);	\
-		/* set column hi-Z (set as input) */			\
-		teensypin_write(DDR, CLEAR, COLUMN_##column);		\
-	} while(0)
-
 #define  update_columns_for_row(matrix, row)				\
 	do {								\
 		/* set row low (set as output) */			\
 		teensypin_write(DDR, SET, ROW_##row);			\
-		/* read columns 7..D and update matrix */		\
-		/* matrix[0x##row][0x7] = ! teensypin_read(COLUMN_7); */	\
+		/* read columns 6..B and update matrix */		\
+		matrix[0x##row][0x6] = ! teensypin_read(COLUMN_6);	\
+		matrix[0x##row][0x7] = ! teensypin_read(COLUMN_7);	\
 		matrix[0x##row][0x8] = ! teensypin_read(COLUMN_8);	\
 		matrix[0x##row][0x9] = ! teensypin_read(COLUMN_9);	\
 		matrix[0x##row][0xA] = ! teensypin_read(COLUMN_A);	\
 		matrix[0x##row][0xB] = ! teensypin_read(COLUMN_B);	\
-		matrix[0x##row][0xC] = ! teensypin_read(COLUMN_C);	\
-		matrix[0x##row][0xD] = ! teensypin_read(COLUMN_D);	\
 		/* set row hi-Z (set as input) */			\
 		teensypin_write(DDR, CLEAR, ROW_##row);			\
 	} while(0)
@@ -179,8 +162,6 @@ uint8_t teensy_init(void) {
 	DDRB  &= ~(1<<4);  // set B(4) as input
 	PORTB &= ~(1<<4);  // set B(4) internal pull-up disabled
 
-	// keyboard LEDs (see "PWM on ports OC1(A|B|C)" in "teensy-2-0.md")
-	_kb_led_all_off();  // (just to put the pins in a known state)
 	TCCR1A  = 0b10101001;  // set and configure fast PWM
 	TCCR1B  = 0b00001001;  // set and configure fast PWM
 
@@ -191,16 +172,14 @@ uint8_t teensy_init(void) {
 	teensypin_write_all_unused(DDR, CLEAR); // set as input
 	teensypin_write_all_unused(PORT, SET);  // set internal pull-up enabled
 
+	// mouse pins
+	teensypin_write_all_mouse(DDR, CLEAR); // set as input
+
 	// rows and columns
 	teensypin_write_all_row(DDR, CLEAR);     // set as input (hi-Z)
 	teensypin_write_all_column(DDR, CLEAR);  // set as input (hi-Z)
-	#if TEENSY__DRIVE_ROWS
-		teensypin_write_all_row(PORT, CLEAR);   // pull-up disabled
-		teensypin_write_all_column(PORT, SET);  // pull-up enabled
-	#elif TEENSY__DRIVE_COLUMNS
-		teensypin_write_all_row(PORT, SET);       // pull-up enabled
-		teensypin_write_all_column(PORT, CLEAR);  // pull-up disabled
-	#endif
+	teensypin_write_all_row(PORT, CLEAR);   // pull-up disabled
+	teensypin_write_all_column(PORT, SET);  // pull-up enabled
 
 	return 0;  // success
 }
@@ -208,27 +187,17 @@ uint8_t teensy_init(void) {
 /* returns
  * - success: 0
  */
-#if KB_ROWS != 6 || KB_COLUMNS != 14
+#if KB_ROWS != 6 || KB_COLUMNS != 12
 	#error "Expecting different keyboard dimensions"
 #endif
 
 uint8_t teensy_update_matrix(bool matrix[KB_ROWS][KB_COLUMNS]) {
-	#if TEENSY__DRIVE_ROWS
-		update_columns_for_row(matrix, 0);
-		update_columns_for_row(matrix, 1);
-		update_columns_for_row(matrix, 2);
-		update_columns_for_row(matrix, 3);
-		update_columns_for_row(matrix, 4);
-		update_columns_for_row(matrix, 5);
-	#elif TEENSY__DRIVE_COLUMNS
-		update_rows_for_column(matrix, 7);
-		update_rows_for_column(matrix, 8);
-		update_rows_for_column(matrix, 9);
-		update_rows_for_column(matrix, A);
-		update_rows_for_column(matrix, B);
-		update_rows_for_column(matrix, C);
-		update_rows_for_column(matrix, D);
-	#endif
+	update_columns_for_row(matrix, 0);
+	update_columns_for_row(matrix, 1);
+	update_columns_for_row(matrix, 2);
+	update_columns_for_row(matrix, 3);
+	update_columns_for_row(matrix, 4);
+	update_columns_for_row(matrix, 5);
 
 	return 0;  // success
 }

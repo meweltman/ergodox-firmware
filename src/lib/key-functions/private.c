@@ -159,7 +159,7 @@ void _kbfun_mousebutton_press_release(bool press, uint8_t buttoncode) {
 uint8_t _move_scalar = 40,
 		_scroll_scalar = 15,
 		_input_scalar = 100,
-		_dead_zone = 4,
+		_dead_zone = 3,
 		_mouse_modifier = 0;
 
 void _kbfun_mouse_modifier_press_release(bool press, uint8_t modifiercode) {
@@ -210,8 +210,8 @@ void _kbfun_mouse_move(uint16_t yin, uint16_t xin) {
 		return;
 	}
 
-	y = _map_mouse_input_value(yin) * -1 - 3;
-	x = _map_mouse_input_value(xin) * -1 + 11;
+	y = _map_mouse_input_value(yin + 25) * -1;
+	x = _map_mouse_input_value(xin - 13) * -1;
 
 	if (fabs(x) < _dead_zone) {
 		x = 0;

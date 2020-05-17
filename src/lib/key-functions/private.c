@@ -9,8 +9,6 @@
 
 #include <stdbool.h>
 #include <stdint.h>
-#include <util/delay.h>
-#include <math.h>
 #include "../../lib-other/pjrc/usb_keyboard/usb_keyboard.h"
 #include "../../lib/usb/usage-page/keyboard.h"
 #include "../../keyboard/layout.h"
@@ -146,105 +144,4 @@ void _kbfun_mediakey_press_release(bool press, uint8_t keycode) {
 			consumer_key = 0;
 		}
 	}
-}
-
-void _kbfun_mousebutton_press_release(bool press, uint8_t buttoncode) {
-	if (press) {
-		mouse_buttons |= buttoncode;
-	} else {
-		mouse_buttons &= ~buttoncode;
-	}
-}
-
-uint8_t _move_scalar = 40,
-		_scroll_scalar = 15,
-		_input_scalar = 100,
-		_dead_zone = 3,
-		_mouse_modifier = 0;
-
-void _kbfun_mouse_modifier_press_release(bool press, uint8_t modifiercode) {
-	if (press) {
-		_mouse_modifier |= modifiercode;
-	} else {
-		_mouse_modifier &= ~modifiercode;
-	}
-}
-
-bool modifierEnabled(uint8_t modifier) {
-	return (_mouse_modifier & modifier) == modifier;
-}
-
-bool scrollX() {
-	return modifierEnabled(MOUSE_SCROLL_X);
-}
-
-bool scrollY() {
-	return modifierEnabled(MOUSE_SCROLL_Y);
-}
-
-bool slow() {
-	return modifierEnabled(MOUSE_SLOW);
-}
-
-int8_t _map_mouse_input_value(int16_t in) {
-	return floor(in/1023.0f * _input_scalar * 2) - _input_scalar;
-}
-
-int8_t _map_mouse_move(int8_t in) {
-	uint8_t scalar = scrollX() || scrollY() ? _scroll_scalar : _move_scalar;
-	if (slow()) {
-		scalar = scalar / 4;
-	}
-	return floor((in/(_input_scalar * 1.0f) * scalar));
-}
-
-void _kbfun_mouse_move(uint16_t yin, uint16_t xin) {
-	int8_t x, y, movex, movey;
-
-	mouse_position[0] = 0;
-	mouse_position[1] = 0;
-	mouse_position[2] = 0;
-	mouse_position[3] = 0;
-
-	if (main_layers_peek(0) == 0) {
-		return;
-	}
-
-	y = _map_mouse_input_value(yin + 25) * -1;
-	x = _map_mouse_input_value(xin - 13) * -1;
-
-	if (fabs(x) < _dead_zone) {
-		x = 0;
-	}
-	if (fabs(y) < _dead_zone) {
-		y = 0;
-	}
-
-	if (x == 0 && y == 0) {
-		return;
-	}
-	
-	double r = sqrt(pow(x, 2.0) + pow(y, 2.0));
-	// small twist
-	double a = atan2(y, x) - 0.8;
-	x = floor(r * cos(a));
-	y = floor(r * sin(a));
-	
-	movey = _map_mouse_move(y);
-	movex = _map_mouse_move(x);
-
-
-	if (scrollX() || scrollY()) {
-		_delay_ms(100);
-		if (scrollX()) {
-			mouse_position[3] = movex;
-		}
-		if (scrollY()) {
-			mouse_position[2] = movey;
-		}
-		return;
-	}
-
-	mouse_position[0] = movex;
-	mouse_position[1] = movey * -1;
 }

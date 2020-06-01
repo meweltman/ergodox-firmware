@@ -18,5 +18,9 @@
 
 	uint8_t teensy_init(void);
 	uint8_t teensy_update_matrix( bool matrix[KB_ROWS][KB_COLUMNS] );
-
+	uint8_t teensy_read_trackball(uint16_t result[4], uint16_t cycles);
+	void teensy_trackball_white_on();
+	void teensy_trackball_white_off();
+	void teensy_trackball_red_on();
+	void teensy_trackball_red_off();
 #endif

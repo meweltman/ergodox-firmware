@@ -76,6 +76,6 @@
 	void mouse_button_press_release           (void);
 	void mouse_modifier_press_release      (void);
 	void mouse_move(uint16_t x, uint16_t y);
-
+	void trackball_move(uint16_t up, uint16_t down, uint16_t left, uint16_t right);
 #endif
 

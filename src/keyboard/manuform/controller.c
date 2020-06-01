@@ -43,3 +43,16 @@ uint8_t kb_update_matrix(bool matrix[KB_ROWS][KB_COLUMNS]) {
 	return 0;  // success
 }
 
+uint8_t kb_read_trackball(uint16_t result[4], uint16_t cycles) {
+	return teensy_read_trackball(result, cycles);
+}
+
+void kb_trackball_white() {
+	teensy_trackball_red_off();
+	teensy_trackball_white_on();
+}
+
+void kb_trackball_red() {
+	teensy_trackball_white_off();
+	teensy_trackball_red_on();
+}

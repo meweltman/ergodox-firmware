@@ -48,9 +48,14 @@ bool    main_arg_any_non_trans_key_pressed;
 bool    main_arg_trans_key_pressed;
 
 // ----------------------------------------------------------------------------
-
+// https://www.pjrc.com/teensy/adc.html
 #define ADC_MUX_PIN_D4    0x20
 #define ADC_MUX_PIN_D7    0x22
+
+#define ADC_MUX_PIN_F1    0x01
+#define ADC_MUX_PIN_F4    0x04
+#define ADC_MUX_PIN_F5    0x05
+#define ADC_MUX_PIN_F6    0x06
 
 /*
  * main()
@@ -66,7 +71,8 @@ int main(void) {
 
 	kb_led_state_ready();
 
-	int16_t x, y;
+	int16_t i, x, y;
+	uint16_t trackball[4] = {0};
 
 	for (;;) {
 		
@@ -125,26 +131,17 @@ int main(void) {
 		x = adc_read(ADC_MUX_PIN_D4);
 		y = adc_read(ADC_MUX_PIN_D7);
 
-		mouse_move(x, y);
-		usb_mouse_send();
-
 		// send the USB report (even if nothing's changed)
 		usb_keyboard_send();
 		usb_extra_consumer_send();
-		_delay_ms(MAKEFILE_DEBOUNCE_TIME);
 
-		// update LEDs
-		if (keyboard_leds & (1<<0)) { kb_led_num_on(); }
-		else { kb_led_num_off(); }
-		if (keyboard_leds & (1<<1)) { kb_led_caps_on(); }
-		else { kb_led_caps_off(); }
-		if (keyboard_leds & (1<<2)) { kb_led_scroll_on(); }
-		else { kb_led_scroll_off(); }
-		if (keyboard_leds & (1<<3)) { kb_led_compose_on(); }
-		else { kb_led_compose_off(); }
-		if (keyboard_leds & (1<<4)) { kb_led_kana_on(); }
-		else { kb_led_kana_off(); }
+		// mouse_move(x, y);
 
+		for(i = 0; i < 1; i++) {
+			kb_read_trackball(trackball, 7000);
+			trackball_move(trackball[0], trackball[1], trackball[2], trackball[3]);
+			usb_mouse_send();
+		}
 	}
 
 	return 0;

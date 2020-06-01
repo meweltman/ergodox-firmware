@@ -24,9 +24,9 @@
 #define DEAD_ZONE 3
 
 uint8_t _mouse_modifier = 0;
-#define SCROLL_X_ENABLED ((_mouse_modifier & MOUSE_SCROLL_X) == MOUSE_SCROLL_X)
-#define SCROLL_Y_ENABLED ((_mouse_modifier & MOUSE_SCROLL_Y) == MOUSE_SCROLL_Y)
-#define SLOW_MOUSE_ENABLED ((_mouse_modifier & MOUSE_SLOW) == MOUSE_SLOW)
+uint8_t _get_mouse_modifier() {
+    return _mouse_modifier;
+}
 
 void mouse_button_press_release(void) {
     uint8_t buttoncode = kb_layout_get(LAYER, ROW, COL);

@@ -26,8 +26,14 @@ include src/makefile-options
 
 .PHONY: build
 
-build:
-	docker build -t ergodox-firmware .
+manuform:
+	docker build -t ergodox-firmware --build-arg KEYBOARD=manuform .
 	docker create -ti --name helper ergodox-firmware bash
-	docker cp helper:/src/firmware.hex ${PWD}/firmware.hex
+	docker cp helper:/src/manuform.hex ${PWD}/manuform.hex
+	docker rm helper
+
+dactyl:
+	docker build -t ergodox-firmware --build-arg KEYBOARD=dactyl .
+	docker create -ti --name helper ergodox-firmware bash
+	docker cp helper:/src/dactyl.hex ${PWD}/dactyl.hex
 	docker rm helper

@@ -7,8 +7,8 @@
 # -----------------------------------------------------------------------------
 
 
-TARGET   := firmware  # the name we want for our program binary
-KEYBOARD := manuform   # keyboard model; see "src/keyboard" for what's available
+TARGET   := $(KEYBOARD)  # the name we want for our program binary
+KEYBOARD := $(KEYBOARD)   # keyboard model; see "src/keyboard" for what's available
 LAYOUT   := qwerty
 
 LED_BRIGHTNESS := 0.5  # a multiplier, with 1 being the max

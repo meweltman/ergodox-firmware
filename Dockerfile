@@ -5,5 +5,8 @@ WORKDIR /
 
 COPY . .
 
+ARG KEYBOARD
+
+
 WORKDIR /src
-RUN make
+RUN KEYBOARD=${KEYBOARD} make

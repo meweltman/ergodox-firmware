@@ -87,7 +87,7 @@ out:
  * - success: 0
  * - failure: twi status code
  */
-#if KB_ROWS != 6 || KB_COLUMNS != 14
+#if KB_ROWS != 6 || KB_COLUMNS != 12
 	#error "Expecting different keyboard dimensions"
 #endif
 uint8_t mcp23018_update_matrix(bool matrix[KB_ROWS][KB_COLUMNS]) {
@@ -103,7 +103,7 @@ uint8_t mcp23018_update_matrix(bool matrix[KB_ROWS][KB_COLUMNS]) {
 	if (ret) {
 		// clear our part of the matrix
 		for (uint8_t row=0; row<=5; row++)
-			for (uint8_t col=0; col<=6; col++)
+			for (uint8_t col=0; col<=5; col++)
 				matrix[row][col] = 0;
 
 		return ret;
@@ -131,7 +131,7 @@ uint8_t mcp23018_update_matrix(bool matrix[KB_ROWS][KB_COLUMNS]) {
 		twi_stop();
 
 		// update matrix
-		for (uint8_t col=0; col<=6; col++) {
+		for (uint8_t col=0; col<=5; col++) {
 			matrix[row][col] = !( data & (1<<col) );
 		}
 	}
@@ -142,7 +142,6 @@ uint8_t mcp23018_update_matrix(bool matrix[KB_ROWS][KB_COLUMNS]) {
 	twi_send(GPIOB);
 	twi_send(0xFF);
 	twi_stop();
-
 	// /update our part of the matrix
 	// --------------------------------------------------------------------
 

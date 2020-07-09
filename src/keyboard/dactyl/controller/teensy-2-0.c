@@ -17,7 +17,6 @@
 #include "../../../lib/twi.h"
 #include "../matrix.h"
 #include "./teensy-2-0--functions.h"
-#include "./teensy-2-0--led.h"
 
 // ----------------------------------------------------------------------------
 
@@ -44,29 +43,38 @@
  *   "teensy-2-0.md", and the '.svg' circuit diagram.
  */
 
+// --- joystick
+#define  JOYSTICK_0  D, 7
+#define  JOYSTICK_1  D, 4
+
+// -- trackball
+#define TRACKBALL_0 F, 7
+#define TRACKBALL_1 F, 5
+#define TRACKBALL_2 F, 4
+#define TRACKBALL_3 F, 1
+
+// -- trackball leds
+#define TRACKBALL_LED_0 B, 6
+#define TRACKBALL_LED_1 B, 5
+
 // --- unused
-#define  UNUSED_0  C, 7
-#define  UNUSED_1  D, 7
-#define  UNUSED_2  D, 4  // hard to use with breadboard (on the end)
-#define  UNUSED_3  D, 5  // hard to use with breadboard (on the end)
-#define  UNUSED_4  E, 6  // hard to use with breadboard (internal)
+#define  UNUSED_0  F, 6
 
 // --- rows
-#define  ROW_0  F, 7
-#define  ROW_1  F, 6
-#define  ROW_2  F, 5
-#define  ROW_3  F, 4
-#define  ROW_4  F, 1
+#define  ROW_0  B, 7
+#define  ROW_1  B, 0
+#define  ROW_2  C, 7
+#define  ROW_3  D, 5
+#define  ROW_4  E, 6
 #define  ROW_5  F, 0
 
 // --- columns
-#define  COLUMN_7  B, 0
-#define  COLUMN_8  B, 1
-#define  COLUMN_9  B, 2
-#define  COLUMN_A  B, 3
-#define  COLUMN_B  D, 2
-#define  COLUMN_C  D, 3
-#define  COLUMN_D  C, 6
+#define  COLUMN_6  B, 1
+#define  COLUMN_7  B, 2
+#define  COLUMN_8  B, 3
+#define  COLUMN_9  D, 2
+#define  COLUMN_A  D, 3
+#define  COLUMN_B  C, 6
 
 // --- helpers
 #define  SET    |=
@@ -87,9 +95,27 @@
 
 #define  teensypin_write_all_unused(register, operation)		\
 	do {								\
-		teensypin_write(register, operation, UNUSED_0);		\
-		teensypin_write(register, operation, UNUSED_1);		\
-		teensypin_write(register, operation, UNUSED_4); }	\
+		teensypin_write(register, operation, UNUSED_0);	}	\
+	while(0)
+
+#define  teensypin_write_all_trackball_led(register, operation)		\
+	do {								\
+		teensypin_write(register, operation, TRACKBALL_LED_0);		\
+		teensypin_write(register, operation, TRACKBALL_LED_1);	}	\
+	while(0)
+
+#define  teensypin_write_all_mouse(register, operation)		\
+	do {								\
+		teensypin_write(register, operation, JOYSTICK_0);		\
+		teensypin_write(register, operation, JOYSTICK_1); }	\
+	while(0)
+
+#define  teensypin_write_all_trackball(register, operation)		\
+	do {								\
+		teensypin_write(register, operation, TRACKBALL_0);		\
+		teensypin_write(register, operation, TRACKBALL_1);      \
+		teensypin_write(register, operation, TRACKBALL_2);      \
+		teensypin_write(register, operation, TRACKBALL_3); }	\
 	while(0)
 
 #define  teensypin_write_all_row(register, operation)		\
@@ -104,13 +130,12 @@
 
 #define  teensypin_write_all_column(register, operation)		\
 	do {								\
+		teensypin_write(register, operation, COLUMN_6);		\
 		teensypin_write(register, operation, COLUMN_7);		\
 		teensypin_write(register, operation, COLUMN_8);		\
 		teensypin_write(register, operation, COLUMN_9);		\
 		teensypin_write(register, operation, COLUMN_A);		\
-		teensypin_write(register, operation, COLUMN_B);		\
-		teensypin_write(register, operation, COLUMN_C);		\
-		teensypin_write(register, operation, COLUMN_D); }	\
+		teensypin_write(register, operation, COLUMN_B); }	\
 	while(0)
 
 
@@ -121,19 +146,20 @@
 	do {								\
 		/* set row low (set as output) */			\
 		teensypin_write(DDR, SET, ROW_##row);			\
-		/* read columns 7..D and update matrix */		\
+		/* read columns 6..B and update matrix */		\
+		matrix[0x##row][0x6] = ! teensypin_read(COLUMN_6);	\
 		matrix[0x##row][0x7] = ! teensypin_read(COLUMN_7);	\
 		matrix[0x##row][0x8] = ! teensypin_read(COLUMN_8);	\
 		matrix[0x##row][0x9] = ! teensypin_read(COLUMN_9);	\
 		matrix[0x##row][0xA] = ! teensypin_read(COLUMN_A);	\
 		matrix[0x##row][0xB] = ! teensypin_read(COLUMN_B);	\
-		matrix[0x##row][0xC] = ! teensypin_read(COLUMN_C);	\
-		matrix[0x##row][0xD] = ! teensypin_read(COLUMN_D);	\
 		/* set row hi-Z (set as input) */			\
 		teensypin_write(DDR, CLEAR, ROW_##row);			\
 	} while(0)
 
 // ----------------------------------------------------------------------------
+bool read, reads[4];
+int i;
 
 /* returns
  * - success: 0
@@ -154,8 +180,6 @@ uint8_t teensy_init(void) {
 	DDRB  &= ~(1<<4);  // set B(4) as input
 	PORTB &= ~(1<<4);  // set B(4) internal pull-up disabled
 
-	// keyboard LEDs (see "PWM on ports OC1(A|B|C)" in "teensy-2-0.md")
-	_kb_led_all_off();  // (just to put the pins in a known state)
 	TCCR1A  = 0b10101001;  // set and configure fast PWM
 	TCCR1B  = 0b00001001;  // set and configure fast PWM
 
@@ -166,11 +190,29 @@ uint8_t teensy_init(void) {
 	teensypin_write_all_unused(DDR, CLEAR); // set as input
 	teensypin_write_all_unused(PORT, SET);  // set internal pull-up enabled
 
+	// mouse pins
+	teensypin_write_all_mouse(DDR, CLEAR); // set as input
+	
+	// trackball pins
+	teensypin_write_all_trackball(DDR, CLEAR);
+	teensypin_write_all_trackball(PORT, SET);  // pull-up enabled
+	teensypin_write_all_trackball_led(DDR, SET);
+	teensypin_write_all_trackball_led(PORT, CLEAR);
+
 	// rows and columns
 	teensypin_write_all_row(DDR, CLEAR);     // set as input (hi-Z)
 	teensypin_write_all_column(DDR, CLEAR);  // set as input (hi-Z)
 	teensypin_write_all_row(PORT, CLEAR);   // pull-up disabled
 	teensypin_write_all_column(PORT, SET);  // pull-up enabled
+
+	// init trackball
+	reads[0] = teensypin_read(TRACKBALL_0);
+	reads[1] = teensypin_read(TRACKBALL_1);
+	reads[2] = teensypin_read(TRACKBALL_2);
+	reads[3] = teensypin_read(TRACKBALL_3);
+
+	DDRB |= (1<<5);
+	PORTB |= (1<<5);
 
 	return 0;  // success
 }
@@ -178,7 +220,7 @@ uint8_t teensy_init(void) {
 /* returns
  * - success: 0
  */
-#if KB_ROWS != 6 || KB_COLUMNS != 14
+#if KB_ROWS != 6 || KB_COLUMNS != 12
 	#error "Expecting different keyboard dimensions"
 #endif
 
@@ -191,4 +233,52 @@ uint8_t teensy_update_matrix(bool matrix[KB_ROWS][KB_COLUMNS]) {
 	update_columns_for_row(matrix, 5);
 
 	return 0;  // success
+}
+
+uint8_t teensy_read_trackball(uint16_t result[4], uint16_t cycles) {
+	result[0] = 0;
+	result[1] = 0;
+	result[2] = 0;
+	result[3] = 0;
+
+	for(i = 0; i < cycles; i++) {
+		read = teensypin_read(TRACKBALL_0);
+		if (read != reads[0]) {
+			reads[0] = read;
+			result[0]++;
+		}
+		read = teensypin_read(TRACKBALL_1);
+		if (read != reads[1]) {
+			reads[1] = read;
+			result[1]++;
+		}
+		read = teensypin_read(TRACKBALL_2);
+		if (read != reads[2]) {
+			reads[2] = read;
+			result[2]++;
+		}
+		read = teensypin_read(TRACKBALL_3);
+		if (read != reads[3]) {
+			reads[3] = read;
+			result[3]++;
+		}
+	}
+
+	return 0;
+}
+
+void teensy_trackball_white_on() {
+	teensypin_write(PORT, SET, TRACKBALL_LED_0);
+}
+
+void teensy_trackball_white_off() {
+	teensypin_write(PORT, CLEAR, TRACKBALL_LED_0);
+}
+
+void teensy_trackball_red_on() {
+	teensypin_write(PORT, SET, TRACKBALL_LED_1);
+}
+
+void teensy_trackball_red_off() {
+	teensypin_write(PORT, CLEAR, TRACKBALL_LED_1);
 }

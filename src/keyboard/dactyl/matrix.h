@@ -13,7 +13,7 @@
 	// --------------------------------------------------------------------
 
 	#define KB_ROWS      6  // must match real life
-	#define KB_COLUMNS  14  // must match real life
+	#define KB_COLUMNS  12  // must match real life
 
 	// --------------------------------------------------------------------
 

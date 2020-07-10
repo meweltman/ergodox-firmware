@@ -54,50 +54,25 @@
 			k40,k41,k42,k43,k44,k45,			\
 			k30,k31,k32,k33,k34,k35,			\
 			k20,k21,k22,k23,k24,k25,			\
-			k10,k11,k12,k13,k14,				\
-			                        k05,k00,		\
-			                            k04,		\
-			                    k03,k02,k01,		\
+			        k10,k11,k12,k13,		    \
+                            k02,k03,            \
+							k04,k05,            \
 									\
 			/* right hand, spatial positions */		\
 			        k58,k59,k5A,k5B,k5C,k5D,		\
 			        k48,k49,k4A,k4B,k4C,k4D,		\
 			        k38,k39,k3A,k3B,k3C,k3D,		\
 			        k28,k29,k2A,k2B,k2C,k2D,		\
-			            k19,k1A,k1B,k1C,k1D,		\
-			k0D,k08,   					\
-			k09,      					\
-			k0C,k0B,k0A )					\
+			                k19,k1A,k1B,k1C,		\
+								    k0A,k0B,        \
+									k08,k09)        \
 									\
 	/* matrix positions */						\
-	{{ k00,k01,k02,k03,k04,k05, na,  na,k08,k09,k0A,k0B,k0C,k0D },	\
-	 { k10,k11,k12,k13,k14, na, na,  na, na,k19,k1A,k1B,k1C,k1D },	\
-	 { k20,k21,k22,k23,k24,k25, na,  na,k28,k29,k2A,k2B,k2C,k2D },	\
-	 { k30,k31,k32,k33,k34,k35, na,  na,k38,k39,k3A,k3B,k3C,k3D },	\
-	 { k40,k41,k42,k43,k44,k45, na,  na,k48,k49,k4A,k4B,k4C,k4D },	\
-	 { k50,k51,k52,k53,k54,k55, na,  na,k58,k59,k5A,k5B,k5C,k5D }}
-
-
-	#define KB_MATRIX_LAYER_SET_ALL(na, kxx)		\
-		LAYER(						\
-			na,					\
-								\
-			kxx,kxx,kxx,kxx,kxx,kxx,		\
-			kxx,kxx,kxx,kxx,kxx,kxx,		\
-			kxx,kxx,kxx,kxx,kxx,kxx,		\
-			kxx,kxx,kxx,kxx,kxx,kxx,		\
-			kxx,kxx,kxx,kxx,kxx,			\
-			                        kxx,kxx,	\
-			                            kxx,	\
-			                    kxx,kxx,kxx,	\
-								\
-			        kxx,kxx,kxx,kxx,kxx,kxx,	\
-			        kxx,kxx,kxx,kxx,kxx,kxx,	\
-			        kxx,kxx,kxx,kxx,kxx,kxx,	\
-			        kxx,kxx,kxx,kxx,kxx,kxx,	\
-			            kxx,kxx,kxx,kxx,kxx,	\
-			kxx,kxx,				\
-			kxx,     				\
-			kxx,kxx,kxx )				\
+	{{ na, na, k02,k03,k04,k05, k08,k09,k0A,k0B, na, na },	\
+	 { na, na, k10,k11,k12,k13, k19,k1A,k1B,k1C, na, na },	\
+	 { k20,k21,k22,k23,k24,k25, k28,k29,k2A,k2B,k2C,k2D },	\
+	 { k30,k31,k32,k33,k34,k35, k38,k39,k3A,k3B,k3C,k3D },	\
+	 { k40,k41,k42,k43,k44,k45, k48,k49,k4A,k4B,k4C,k4D },	\
+	 { k50,k51,k52,k53,k54,k55, k58,k59,k5A,k5B,k5C,k5D }}
 
 #endif

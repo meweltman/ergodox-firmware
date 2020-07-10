@@ -267,18 +267,18 @@ uint8_t teensy_read_trackball(uint16_t result[4], uint16_t cycles) {
 	return 0;
 }
 
-void teensy_trackball_white_on() {
+void teensy_trackball_white_on(void) {
 	teensypin_write(PORT, SET, TRACKBALL_LED_0);
 }
 
-void teensy_trackball_white_off() {
+void teensy_trackball_white_off(void) {
 	teensypin_write(PORT, CLEAR, TRACKBALL_LED_0);
 }
 
-void teensy_trackball_red_on() {
+void teensy_trackball_red_on(void) {
 	teensypin_write(PORT, SET, TRACKBALL_LED_1);
 }
 
-void teensy_trackball_red_off() {
+void teensy_trackball_red_off(void) {
 	teensypin_write(PORT, CLEAR, TRACKBALL_LED_1);
 }

@@ -47,12 +47,12 @@ uint8_t kb_read_trackball(uint16_t result[4], uint16_t cycles) {
 	return teensy_read_trackball(result, cycles);
 }
 
-void kb_trackball_white() {
+void kb_trackball_white(void) {
 	teensy_trackball_red_off();
 	teensy_trackball_white_on();
 }
 
-void kb_trackball_red() {
+void kb_trackball_red(void) {
 	teensy_trackball_white_off();
 	teensy_trackball_red_on();
 }

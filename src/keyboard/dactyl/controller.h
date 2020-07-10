@@ -39,5 +39,5 @@
 	uint8_t kb_init(void);
 	uint8_t kb_update_matrix(bool matrix[KB_ROWS][KB_COLUMNS]);
 	uint8_t kb_read_trackball(uint16_t result[4], uint16_t cycles);
-	void kb_trackball_white();
+	void kb_trackball_white(void);
 #endif

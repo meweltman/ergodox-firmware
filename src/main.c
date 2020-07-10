@@ -52,11 +52,6 @@ bool    main_arg_trans_key_pressed;
 #define ADC_MUX_PIN_D4    0x20
 #define ADC_MUX_PIN_D7    0x22
 
-#define ADC_MUX_PIN_F1    0x01
-#define ADC_MUX_PIN_F4    0x04
-#define ADC_MUX_PIN_F5    0x05
-#define ADC_MUX_PIN_F6    0x06
-
 /*
  * main()
  */
@@ -71,7 +66,7 @@ int main(void) {
 
 	kb_led_state_ready();
 
-	int16_t i, x, y;
+	int16_t i;
 	uint16_t trackball[4] = {0};
 
 	for (;;) {
@@ -128,14 +123,16 @@ int main(void) {
 		#undef is_pressed
 		#undef was_pressed
 
+		/*
+		int16_t i, x, y;
 		x = adc_read(ADC_MUX_PIN_D4);
 		y = adc_read(ADC_MUX_PIN_D7);
+		mouse_move(x, y);
+		*/
 
 		// send the USB report (even if nothing's changed)
 		usb_keyboard_send();
 		usb_extra_consumer_send();
-
-		// mouse_move(x, y);
 
 		for(i = 0; i < 1; i++) {
 			kb_read_trackball(trackball, 7000);

@@ -48,10 +48,10 @@
 #define  JOYSTICK_1  D, 4
 
 // -- trackball
-#define TRACKBALL_0 F, 7
-#define TRACKBALL_1 F, 5
-#define TRACKBALL_2 F, 4
-#define TRACKBALL_3 F, 1
+#define TRACKBALL_RIGHT F, 7
+#define TRACKBALL_LEFT F, 5
+#define TRACKBALL_UP F, 4
+#define TRACKBALL_DOWN F, 1
 
 // -- trackball leds
 #define TRACKBALL_LED_0 B, 6
@@ -112,10 +112,10 @@
 
 #define  teensypin_write_all_trackball(register, operation)		\
 	do {								\
-		teensypin_write(register, operation, TRACKBALL_0);		\
-		teensypin_write(register, operation, TRACKBALL_1);      \
-		teensypin_write(register, operation, TRACKBALL_2);      \
-		teensypin_write(register, operation, TRACKBALL_3); }	\
+		teensypin_write(register, operation, TRACKBALL_UP);		\
+		teensypin_write(register, operation, TRACKBALL_DOWN);      \
+		teensypin_write(register, operation, TRACKBALL_LEFT);      \
+		teensypin_write(register, operation, TRACKBALL_RIGHT); }	\
 	while(0)
 
 #define  teensypin_write_all_row(register, operation)		\
@@ -206,10 +206,10 @@ uint8_t teensy_init(void) {
 	teensypin_write_all_column(PORT, SET);  // pull-up enabled
 
 	// init trackball
-	reads[0] = teensypin_read(TRACKBALL_0);
-	reads[1] = teensypin_read(TRACKBALL_1);
-	reads[2] = teensypin_read(TRACKBALL_2);
-	reads[3] = teensypin_read(TRACKBALL_3);
+	reads[0] = teensypin_read(TRACKBALL_UP);
+	reads[1] = teensypin_read(TRACKBALL_DOWN);
+	reads[2] = teensypin_read(TRACKBALL_LEFT);
+	reads[3] = teensypin_read(TRACKBALL_RIGHT);
 
 	DDRB |= (1<<5);
 	PORTB |= (1<<5);
@@ -242,22 +242,22 @@ uint8_t teensy_read_trackball(uint16_t result[4], uint16_t cycles) {
 	result[3] = 0;
 
 	for(i = 0; i < cycles; i++) {
-		read = teensypin_read(TRACKBALL_0);
+		read = teensypin_read(TRACKBALL_UP);
 		if (read != reads[0]) {
 			reads[0] = read;
 			result[0]++;
 		}
-		read = teensypin_read(TRACKBALL_1);
+		read = teensypin_read(TRACKBALL_DOWN);
 		if (read != reads[1]) {
 			reads[1] = read;
 			result[1]++;
 		}
-		read = teensypin_read(TRACKBALL_2);
+		read = teensypin_read(TRACKBALL_LEFT);
 		if (read != reads[2]) {
 			reads[2] = read;
 			result[2]++;
 		}
-		read = teensypin_read(TRACKBALL_3);
+		read = teensypin_read(TRACKBALL_RIGHT);
 		if (read != reads[3]) {
 			reads[3] = read;
 			result[3]++;

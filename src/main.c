@@ -134,10 +134,22 @@ int main(void) {
 		usb_keyboard_send();
 		usb_extra_consumer_send();
 
-		for(i = 0; i < 1; i++) {
-			kb_read_trackball(trackball, 7000);
-			trackball_move(trackball[0], trackball[1], trackball[2], trackball[3]);
-			usb_mouse_send();
+		if (main_layers_peek(0) == 1) {
+			for(i = 0; i < 1; i++) {
+				kb_read_trackball(trackball, 7000);
+				trackball_move(trackball[0], trackball[1], trackball[2], trackball[3]);
+				usb_mouse_send();
+			}
+			kb_trackball_green();
+		} else {
+			/*
+			int16_t i, x, y;
+			x = adc_read(ADC_MUX_PIN_D4);
+			y = adc_read(ADC_MUX_PIN_D7);
+			mouse_move(x, y);
+			*/
+			kb_trackball_blue();
+			_delay_ms(5);
 		}
 	}
 

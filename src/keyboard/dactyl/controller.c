@@ -49,10 +49,28 @@ uint8_t kb_read_trackball(uint16_t result[4], uint16_t cycles) {
 
 void kb_trackball_white(void) {
 	teensy_trackball_red_off();
+	teensy_trackball_green_off();
+	teensy_trackball_blue_off();
 	teensy_trackball_white_on();
 }
 
 void kb_trackball_red(void) {
 	teensy_trackball_white_off();
+	teensy_trackball_green_off();
+	teensy_trackball_blue_off();
 	teensy_trackball_red_on();
+}
+
+void kb_trackball_green(void) {
+	teensy_trackball_white_off();
+	teensy_trackball_green_on();
+	teensy_trackball_blue_off();
+	teensy_trackball_red_off();
+}
+
+void kb_trackball_blue(void) {
+	teensy_trackball_white_off();
+	teensy_trackball_green_off();
+	teensy_trackball_blue_on();
+	teensy_trackball_red_off();
 }

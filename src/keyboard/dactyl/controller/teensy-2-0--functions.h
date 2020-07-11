@@ -23,4 +23,8 @@
 	void teensy_trackball_white_off(void);
 	void teensy_trackball_red_on(void);
 	void teensy_trackball_red_off(void);
+	void teensy_trackball_green_on(void);
+	void teensy_trackball_green_off(void);
+	void teensy_trackball_blue_on(void);
+	void teensy_trackball_blue_off(void);
 #endif

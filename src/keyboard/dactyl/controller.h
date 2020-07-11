@@ -40,4 +40,7 @@
 	uint8_t kb_update_matrix(bool matrix[KB_ROWS][KB_COLUMNS]);
 	uint8_t kb_read_trackball(uint16_t result[4], uint16_t cycles);
 	void kb_trackball_white(void);
+	void kb_trackball_red(void);
+	void kb_trackball_green(void);
+	void kb_trackball_blue(void);
 #endif

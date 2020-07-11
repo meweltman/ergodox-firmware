@@ -54,8 +54,10 @@
 #define TRACKBALL_DOWN F, 1
 
 // -- trackball leds
-#define TRACKBALL_LED_0 B, 6
-#define TRACKBALL_LED_1 B, 5
+#define TRACKBALL_LED_WHITE B, 6
+#define TRACKBALL_LED_RED B, 5
+#define TRACKBALL_LED_BLUE D, 7
+#define TRACKBALL_LED_GREEN F, 6
 
 // --- unused
 #define  UNUSED_0  F, 6
@@ -100,8 +102,10 @@
 
 #define  teensypin_write_all_trackball_led(register, operation)		\
 	do {								\
-		teensypin_write(register, operation, TRACKBALL_LED_0);		\
-		teensypin_write(register, operation, TRACKBALL_LED_1);	}	\
+		teensypin_write(register, operation, TRACKBALL_LED_WHITE);		\
+		teensypin_write(register, operation, TRACKBALL_LED_BLUE);		\
+		teensypin_write(register, operation, TRACKBALL_LED_GREEN);		\
+		teensypin_write(register, operation, TRACKBALL_LED_RED);	}	\
 	while(0)
 
 #define  teensypin_write_all_mouse(register, operation)		\
@@ -211,9 +215,6 @@ uint8_t teensy_init(void) {
 	reads[2] = teensypin_read(TRACKBALL_LEFT);
 	reads[3] = teensypin_read(TRACKBALL_RIGHT);
 
-	DDRB |= (1<<5);
-	PORTB |= (1<<5);
-
 	return 0;  // success
 }
 
@@ -268,17 +269,33 @@ uint8_t teensy_read_trackball(uint16_t result[4], uint16_t cycles) {
 }
 
 void teensy_trackball_white_on(void) {
-	teensypin_write(PORT, SET, TRACKBALL_LED_0);
+	teensypin_write(PORT, SET, TRACKBALL_LED_WHITE);
 }
 
 void teensy_trackball_white_off(void) {
-	teensypin_write(PORT, CLEAR, TRACKBALL_LED_0);
+	teensypin_write(PORT, CLEAR, TRACKBALL_LED_WHITE);
 }
 
 void teensy_trackball_red_on(void) {
-	teensypin_write(PORT, SET, TRACKBALL_LED_1);
+	teensypin_write(PORT, SET, TRACKBALL_LED_RED);
 }
 
 void teensy_trackball_red_off(void) {
-	teensypin_write(PORT, CLEAR, TRACKBALL_LED_1);
+	teensypin_write(PORT, CLEAR, TRACKBALL_LED_RED);
+}
+
+void teensy_trackball_green_on(void) {
+	teensypin_write(PORT, SET, TRACKBALL_LED_GREEN);
+}
+
+void teensy_trackball_green_off(void) {
+	teensypin_write(PORT, CLEAR, TRACKBALL_LED_GREEN);
+}
+
+void teensy_trackball_blue_on(void) {
+	teensypin_write(PORT, SET, TRACKBALL_LED_BLUE);
+}
+
+void teensy_trackball_blue_off(void) {
+	teensypin_write(PORT, CLEAR, TRACKBALL_LED_BLUE);
 }

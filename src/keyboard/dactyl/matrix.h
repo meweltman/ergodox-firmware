@@ -64,11 +64,11 @@
                     k38,k39,k3A,k3B,k3C,k3D,        \
                     k28,k29,k2A,k2B,k2C,k2D,        \
                     k18,k19,k1A,k1B,k1C,            \
-					                k17,k09,        \
-								k0B,k0A,k08)        \
+					                k17,k08,        \
+								k07,k09,k0A)        \
                                                     \
     /* matrix positions */                          \
-    {{ na ,na ,k02,k03,k04,k05, k08,k09,k0A,k0B, na, na },    \
+    {{ na ,na ,k02,k03,k04,k05, k07,k08,k09,k0A, na, na },    \
      { k10,k11,k12,k13,k14,k15, k17,k18,k19,k1A,k1B,k1C },    \
      { k20,k21,k22,k23,k24,k25, k28,k29,k2A,k2B,k2C,k2D },    \
      { k30,k31,k32,k33,k34,k35, k38,k39,k3A,k3B,k3C,k3D },    \

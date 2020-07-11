@@ -31,7 +31,7 @@ _shiftL, _A,    _S,     _D,     _F,     _G,
 _guiL,   _Z,    _X,     _C,     _V,     _B,
           0,     0, _grave, _equal,  _altL,
                                _bs, _ctrlL,
-                         1,  _home,   _end,
+                         _home,   _end,  1,
 // right hand
 _6,       _7,       _8,        _9,        _0,         _dash,
 _Y,       _U,       _I,        _O,        _P,         _backslash,
@@ -39,7 +39,7 @@ _H,       _J,       _K,        _L,        _semicolon, _quote,
 _N,       _M,       _comma,    _period,   _slash,     _shiftR,
  0, _bracketL,    _bracketR,         0,        0,
 _enter, _space,
-     0,   _del, 1),
+     1,   _del, 0),
 
 
 	KB_MATRIX_LAYER(  // layout: layer 1: function and symbol keys
@@ -60,7 +60,7 @@ _mouseScrollY, _mouseLeft, _mouseMiddle, _mouseRight, 0,        0,
 _mouseSlow,    0,          0,            0,           0,        0,
 0,             0,          0,            0,           0,
 1,             1,
-0,             1, 1),
+1,             1, 0),
 
 
 	KB_MATRIX_LAYER(  // layout: layer 2: keyboard functions
@@ -144,7 +144,7 @@ sshprr, kprrel, kprrel, kprrel, kprrel, kprrel,
 kprrel, kprrel, kprrel, kprrel, kprrel, kprrel,
         kprrel, kprrel, kprrel, kprrel, kprrel,
                                 kprrel, kprrel,
-                        lpush1, kprrel, kprrel,
+                        kprrel, kprrel, lpush1,
 // right hand
 kprrel, kprrel, kprrel, kprrel, kprrel, kprrel,
 kprrel, kprrel, kprrel, kprrel, kprrel, kprrel,
@@ -152,7 +152,7 @@ kprrel, kprrel, kprrel, kprrel, kprrel, kprrel,
 kprrel, kprrel, kprrel, kprrel, kprrel, sshprr,
 kprrel, kprrel, kprrel, kprrel, kprrel,
 kprrel, kprrel,
-kprrel, kprrel, NULL),
+NULL  , kprrel, kprrel),
 
 
 	KB_MATRIX_LAYER(  // press: layer 1: function and symbol keys
@@ -165,7 +165,7 @@ ktrans, mouses, kprrel, kprrel, kprrel, mouses,
 ktrans, mouses, ktrans, ktrans, ktrans, NULL  ,
         NULL  , NULL  , NULL  , NULL  , ktrans,
                                 ktrans, ktrans,
-                        NULL  , ktrans, ktrans,
+                        ktrans, ktrans, NULL  ,
 // right hand
 kprrel, kprrel, kprrel, kprrel, kprrel, kprrel,
 mouses, NULL  , NULL  , NULL  , NULL  , dbtldr,
@@ -173,7 +173,7 @@ mouses, mouseb, mouseb, mouseb, NULL  , NULL  ,
 mouses, NULL  , NULL  , NULL  , NULL  , NULL  ,
 NULL  , NULL  , NULL  , NULL  , NULL  ,
 ktrans, ktrans,
-ktrans, ktrans, lpop1 ),
+lpop1,  ktrans, ktrans ),
 
 
 	KB_MATRIX_LAYER(  // press: layer 2: keyboard functions
@@ -213,7 +213,7 @@ sshprr, kprrel, kprrel, kprrel, kprrel, kprrel,
 kprrel, kprrel, kprrel, kprrel, kprrel, kprrel,
         kprrel, kprrel, kprrel, kprrel, kprrel,
                                 kprrel, kprrel,
-                        lpush1, kprrel, kprrel,
+                        kprrel, kprrel, lpush1,
 // right hand
 kprrel, kprrel, kprrel, kprrel, kprrel, kprrel,
 kprrel, kprrel, kprrel, kprrel, kprrel, kprrel,
@@ -221,7 +221,7 @@ kprrel, kprrel, kprrel, kprrel, kprrel, kprrel,
 kprrel, kprrel, kprrel, kprrel, kprrel, sshprr,
 kprrel, kprrel, kprrel, kprrel, kprrel,
 kprrel, kprrel,
-kprrel, kprrel, NULL),
+NULL  , kprrel, kprrel),
 
 
 	KB_MATRIX_LAYER(  // release: layer 1: function and symbol keys
@@ -234,7 +234,7 @@ ktrans, mouses, kprrel, kprrel, kprrel, mouses,
 ktrans, mouses, ktrans, ktrans, ktrans, NULL  ,
         NULL  , NULL  , NULL  , NULL  , ktrans,
                                 ktrans, ktrans,
-                        NULL  , ktrans, ktrans,
+                        ktrans, ktrans, NULL  ,
 // right hand
 kprrel, kprrel, kprrel, kprrel, kprrel, kprrel,
 mouses, NULL  , NULL  , NULL  , NULL  , dbtldr,
@@ -242,7 +242,7 @@ mouses, mouseb, mouseb, mouseb, NULL  , NULL  ,
 mouses, NULL  , NULL  , NULL  , NULL  , NULL  ,
 NULL  , NULL  , NULL  , NULL  , NULL  ,
 ktrans, ktrans,
-ktrans, ktrans, lpop1 ),
+lpop1,  ktrans, ktrans),
 
 
 	KB_MATRIX_LAYER(  // release: layer 2: keyboard functions

@@ -148,7 +148,7 @@ int main(void) {
 			y = adc_read(ADC_MUX_PIN_D7);
 			mouse_move(x, y);
 			*/
-			kb_trackball_blue();
+			kb_trackball_red();
 			_delay_ms(5);
 		}
 	}

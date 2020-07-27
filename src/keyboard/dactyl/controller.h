@@ -43,4 +43,6 @@
 	void kb_trackball_red(void);
 	void kb_trackball_green(void);
 	void kb_trackball_blue(void);
+	void kb_trackball_led_off(void);
+	void kb_trackball_led_on(void);
 #endif

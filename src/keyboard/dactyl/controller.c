@@ -69,8 +69,22 @@ void kb_trackball_green(void) {
 }
 
 void kb_trackball_blue(void) {
+	teensy_trackball_red_off();
 	teensy_trackball_white_off();
 	teensy_trackball_green_off();
 	teensy_trackball_blue_on();
+}
+
+void kb_trackball_led_off(void) {
 	teensy_trackball_red_off();
+	teensy_trackball_white_off();
+	teensy_trackball_green_off();
+	teensy_trackball_blue_off();
+}
+
+void kb_trackball_led_on(void) {
+	teensy_trackball_red_on();
+	teensy_trackball_white_on();
+	teensy_trackball_green_on();
+	teensy_trackball_blue_on();
 }

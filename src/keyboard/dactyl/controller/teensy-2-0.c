@@ -54,9 +54,9 @@
 #define TRACKBALL_DOWN F, 1
 
 // -- trackball leds
-#define TRACKBALL_LED_WHITE B, 6
-#define TRACKBALL_LED_RED B, 5
-#define TRACKBALL_LED_BLUE D, 7
+#define TRACKBALL_LED_WHITE B, 5
+#define TRACKBALL_LED_RED D, 7
+#define TRACKBALL_LED_BLUE B, 6
 #define TRACKBALL_LED_GREEN F, 6
 
 // --- unused
